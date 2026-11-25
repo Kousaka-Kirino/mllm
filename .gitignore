@@ -1,0 +1,27 @@
+# 数据与产物：不进仓库，由代码 + 种子重建
+data/synth/
+data/images/
+data/*.jsonl
+data/datacard.json
+data/hashes.json
+
+# 运行产物
+outputs/
+reports/*.png
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# 环境
+.venv/
+venv/
+.env
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
