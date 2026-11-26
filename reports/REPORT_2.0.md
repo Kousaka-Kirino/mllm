@@ -1,6 +1,6 @@
 # PicoVLM · 结果汇总（自动生成）
 
-生成时间：20261126T030927Z
+生成时间：20261126T032135Z
 
 > 本文件由 `python -m stage9_report.collect` 生成，不要手改。
 > 每个数字都能在 `reports/RESULTS.json` 与 `outputs/` 里找到来源。

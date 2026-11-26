@@ -142,8 +142,12 @@ def check_balance(data: dict[str, list[Sample]], profile: str) -> str:
             cells[key] += 1
             fams[key].add(s.family_id)
         counts = sorted(cells.values())
-        if counts and counts[0] != counts[-1]:
-            bad.append(f"{split} 四格不均：{dict(cells)}")
+        # 允许极小偏差：先验标签是从数据重算的（build._add 会把"自报 consistent
+        # 但实际不成立"的样本改标为 conflict），改动后四格不可能永远严格整除。
+        # 容差取每格数量的 0.2%（最少 1），超过就算失败。
+        tol = max(1, round(0.002 * (sum(counts) / max(len(counts), 1))))
+        if counts and counts[-1] - counts[0] > tol:
+            bad.append(f"{split} 四格不均（差 {counts[-1] - counts[0]} > 容差 {tol}）：{dict(cells)}")
         for key, fs in fams.items():
             if len(fs) < need:
                 bad.append(f"{split}/{key} 只有 {len(fs)} 个 family（目标 ≥{need}）")
