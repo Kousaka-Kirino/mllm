@@ -1,93 +1,174 @@
-"""S3 验收：labels 掩码、dry-run 两个训练入口、评测管线端到端。
+"""S3 验收：数据管线 → 梯度通路 → 存盘。
 
-dry-run 用替身模型 + 字符级 tokenizer，不下载 1.5GB 权重——CPU 几十秒跑完。
+    python -m stage3_train.verify_stage3            # CPU 检查（秒级）
+    python -m stage3_train.verify_stage3 --load     # 额外检查真权重 LoRA
 """
 
 from __future__ import annotations
 
-import io as _io
+import argparse
+import os
 import subprocess
 import sys
+import tempfile
+from pathlib import Path
 
-from picovlm.config import DATA
-from picovlm.report import Skip, require, run
-from picovlm.schema import Sample
+import numpy as np
+import torch
+
+from picovlm.config import OUTPUTS, ROOT
+from picovlm.report import Skip, approx, require, run
+
+from .dataset import EOS_SUFFIX, PROMPT, ChartSFT, collate, load_samples
 
 
-class _CharTok:
-    def __call__(self, text, add_special_tokens=False):
-        return {"input_ids": [ord(c) % 1000 + 10 for c in text]}
-
-
-def _run(module: str, *args: str) -> str:
-    proc = subprocess.run([sys.executable, "-m", module, *args],
+def py(*args: str, timeout: int = 900) -> subprocess.CompletedProcess:
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8", "HF_HUB_OFFLINE": "1"}
+    return subprocess.run([sys.executable, *args], cwd=str(ROOT),
                           capture_output=True, text=True, encoding="utf-8",
-                          errors="replace", timeout=600)
-    out = (proc.stdout or "") + (proc.stderr or "")
-    if proc.returncode != 0:
-        raise AssertionError(f"{module} 退出码 {proc.returncode}\n{out[-1500:]}")
-    return out
+                          errors="replace", timeout=timeout, env=env)
 
 
-def main() -> int:
-    from stage3_train.data import build_example, collate
+def check_dataset() -> str:
+    from transformers import AutoTokenizer
 
-    path = DATA / "synth" / "train.jsonl"
-    if not path.exists():
-        raise Skip("数据未生成")
+    tok = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")
+    samples = load_samples("train", limit=4)
+    ds = ChartSFT(samples, tok, image_size=384)
+    item = ds[0]
+    px = item["pixel_values"]
+    require(px.shape == (3, 384, 384), f"像素形状 {px.shape}")
+    require(-1.0 <= float(px.min()) and float(px.max()) <= 1.0,
+            f"像素范围 [{px.min():.2f},{px.max():.2f}] 不在 [-1,1]")
+    ids, lab = item["input_ids"], item["labels"]
+    require(len(ids) == len(lab), "input_ids/labels 长度不一致")
+    n_sup = sum(1 for x in lab if x != -100)
+    require(n_sup == len(tok(samples[0].answer + EOS_SUFFIX,
+                             add_special_tokens=False)["input_ids"]),
+            f"监督位数 {n_sup} 不等于答案 token 数")
+    require(all(x == -100 for x in lab[:len(lab) - n_sup]), "prompt 段没有全部 -100")
+    require(lab[-1] != -100, "答案末尾（EOS）没有被监督")
+    return f"sample={samples[0].id} seq={len(ids)} supervised={n_sup}"
 
-    samples = [Sample.from_dict(r) for r in
-               [__import__("json").loads(l) for l in
-                _io.open(path, encoding="utf-8")][:4]]
 
-    def labels_only_answer() -> str:
-        ex = build_example(samples[0], _CharTok(), image_size=64)
-        n_prompt = int((ex["labels"] == -100).sum())
-        n_answer = ex["labels"].numel() - n_prompt
-        require(n_answer > 0, "答案 token 全被掩掉了")
-        require(bool((ex["labels"][:n_prompt] == -100).all()), "prompt 段没掩干净")
-        require(bool((ex["labels"][n_prompt:] != -100).all()), "答案段被误掩")
-        return f"prompt {n_prompt} token 掩掉，答案 {n_answer} token 参与 loss"
+def check_collate() -> str:
+    from transformers import AutoTokenizer
 
-    def collate_padding() -> str:
-        batch = collate([build_example(s, _CharTok(), 64) for s in samples])
-        L = batch["input_ids"].shape[1]
-        require(batch["pixel_values"].shape == (len(samples), 3, 64, 64), "图像 batch 形状错")
-        pad = batch["attention_mask"] == 0
-        require(bool((batch["labels"][pad] == -100).all()), "padding 位置 label 必须 -100")
-        require(int(batch["attention_mask"].sum()) > 0, "attention_mask 全 0")
-        require(int((batch["labels"] != -100).sum()) > 0, "没有任何监督 token")
-        return f"{len(samples)}×{L}，padding 已同步掩码"
+    tok = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-0.5B-Instruct")
+    tok.pad_token = tok.eos_token
+    ds = ChartSFT(load_samples("train", limit=3), tok, image_size=384)
+    b = collate([ds[0], ds[1]], tok.pad_token_id)
+    ids, msk, lab = b["input_ids"], b["attention_mask"], b["labels"]
+    require(ids.shape == msk.shape == lab.shape, "三个张量形状不一致")
+    for row_ids, row_msk, row_lab in zip(ids, msk, lab):
+        n_real = int(row_msk.sum())
+        require(all(int(x) == tok.pad_token_id for x in row_ids[n_real:]),
+                "padding 位置不是 pad_id")
+        require(all(int(x) == -100 for x in row_lab[n_real:]),
+                "padding 位置的 label 不是 -100")
+        require(all(int(x) == 0 for x in row_msk[n_real:]), "mask 没有清零")
+    return f"batch={ids.shape} padded_ok"
 
-    def align_dry_run() -> str:
-        out = _run("stage3_train.train_align", "--dry-run")
-        require("loss=" in out, f"没有 loss 输出：{out[-300:]}")
-        return out.strip().splitlines()[-1][:80]
 
-    def sft_dry_run() -> str:
-        out = _run("stage3_train.train_sft", "--dry-run")
-        require("loss=" in out, f"没有 loss 输出：{out[-300:]}")
-        return out.strip().splitlines()[-1][:80]
+def check_prompt_contract() -> str:
+    require(PROMPT == "Question: {q}\nAnswer:", f"prompt 模板被改动：{PROMPT!r}")
+    require(EOS_SUFFIX == "\n", "EOS 后缀被改动")
+    return "prompt/eos 模板稳定"
 
-    def eval_pipeline() -> str:
-        _run("stage3_train.eval_suite", "--policy", "oracle", "--split", "test",
-             "--run-id", "verify-oracle")
-        import json
-        from picovlm.config import OUTPUTS
-        recs = json.loads((OUTPUTS / "eval" / "verify-oracle" / "records.json")
-                          .read_text(encoding="utf-8"))
-        require(recs and all(r["accuracy"] == 1.0 for r in recs),
-                f"oracle 不是 100%：{[(r['suite'], r['accuracy']) for r in recs]}")
-        return f"{len(recs)} 个 suite 全部 100%"
 
-    return run([
-        ("labels-only-answer", labels_only_answer),
-        ("collate-padding", collate_padding),
-        ("align-dry-run", align_dry_run),
-        ("sft-dry-run", sft_dry_run),
-        ("eval-pipeline", eval_pipeline),
-    ], title="stage3_train")
+def check_freeze() -> str:
+    from transformers import AutoTokenizer
+
+    from picovlm.config import load_config, model_config_from
+    from picovlm.model.vlm import PicoVLM
+
+    cfg = load_config("align_pilot.yaml")
+    mc = model_config_from(cfg)
+    tok = AutoTokenizer.from_pretrained(mc.llm)
+    model = PicoVLM(mc, load_weights=False)
+    from .align import freeze_for_align
+
+    params = freeze_for_align(model)
+    n_train = sum(p.numel() for p in params)
+    n_vision = sum(p.numel() for p in model.vision.parameters()
+                   if p.requires_grad)
+    require(n_vision == 0, "视觉塔没有被冻结")
+    approx(n_train / 1e6, sum(p.numel() for p in model.connector.parameters()) / 1e6,
+           1e-6, "可训参数应只有连接器")
+    return f"trainable {n_train/1e6:.2f}M = connector only"
+
+
+def _dry(module: str, tag: str) -> str:
+    out = Path(tempfile.mkdtemp(prefix=f"s3_{tag}_")) / "ckpt"
+    r = py("-m", module, "--dry-run", "--limit", "4", "--batch-size", "1",
+           "--grad-accum", "2", "--max-steps", "1", "--epochs", "1",
+           "--out", str(out))
+    if r.returncode != 0:
+        raise AssertionError(f"{module} dry-run 失败：\n{r.stdout[-800:]}\n{r.stderr[-800:]}")
+    ck = out / "connector.pt"
+    require(ck.exists(), f"{module} 没有存下 connector.pt")
+    state = torch.load(ck, map_location="cpu")
+    require(all(torch.isfinite(v).all() for v in state.values()
+                if torch.is_floating_point(v)), "存的连接器权重里有 NaN/Inf")
+    return f"{tag} dry-run ok  state={len(state)} tensors"
+
+
+def check_align_dry() -> str:
+    return _dry("stage3_train.align", "align")
+
+
+def check_sft_dry() -> str:
+    return _dry("stage3_train.sft", "sft")
+
+
+def check_align_ckpt() -> str:
+    p = OUTPUTS / "ckpt" / "align" / "connector.pt"
+    if not p.exists():
+        raise Skip("还没跑过真对齐训练（python -m stage3_train.align）")
+    state = torch.load(p, map_location="cpu")
+    bad = [k for k, v in state.items()
+           if torch.is_floating_point(v) and not torch.isfinite(v).all()]
+    require(not bad, f"连接器里有非有限值：{bad[:3]}")
+    norm = float(torch.cat([v.flatten() for v in state.values()]).norm())
+    require(norm > 0, "连接器权重全 0")
+    return f"{p.name} ok  tensors={len(state)}  |w|={norm:.2f}"
+
+
+def check_lora_attach() -> str:
+    from transformers import AutoTokenizer
+
+    from picovlm.config import load_config, model_config_from
+    from picovlm.model.vlm import PicoVLM
+
+    cfg = load_config("sft_pilot.yaml")
+    mc = model_config_from(cfg)
+    tok = AutoTokenizer.from_pretrained(mc.llm)
+    model = PicoVLM(mc, load_weights=True)
+    from .sft import attach_lora
+
+    n = attach_lora(model, cfg.get("lora", {}))
+    require(n > 0, "LoRA 没有挂上任何参数")
+    require(1e5 < n < 5e7, f"LoRA 参数量异常：{n}")
+    return f"lora params {n/1e6:.2f}M  (r={cfg['lora']['r']})"
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--load", action="store_true", help="额外做真权重 LoRA 检查")
+    args = ap.parse_args(argv)
+    checks = [
+        ("dataset-shapes", check_dataset),
+        ("collate-padding", check_collate),
+        ("prompt-contract", check_prompt_contract),
+        ("freeze-policy", check_freeze),
+        ("align-dry-run", check_align_dry),
+        ("sft-dry-run", check_sft_dry),
+        ("align-ckpt", check_align_ckpt),
+    ]
+    if args.load:
+        checks.append(("lora-attach", check_lora_attach))
+    return run(checks, "S3 验收（2.0）")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())
