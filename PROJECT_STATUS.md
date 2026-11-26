@@ -65,6 +65,7 @@
 | 反事实增广（措辞 / 数值） | ✅ 代码 | 20 → 60 条，`counterfactual.py` |
 | 冲突加权 GRPO | 🟡 | G=2–4 探针：**5/6 组优势恒 0**（负结果） |
 | RFT 对照 | ✅ 代码 | `build_rft` + `rft.py` |
+| **E2 反事实测量** | ✅ | `stage5_intervene/invariance.py`：措辞不变性 1.000、数值响应 0.000、仍答旧答案 0.833（n=6，探索性） |
 | 三臂配对比较 | ✅ | `compare_arms.py` → `reports/compare_*.md` |
 
 ## G. 预算与记忆（S6/S7）

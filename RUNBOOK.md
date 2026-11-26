@@ -95,6 +95,7 @@ python -m stage5_intervene.train --method curriculum --steps 20
 python -m stage5_intervene.train --method counterfactual --steps 20
 python -m stage5_intervene.train --method grpo --steps 6 --group 2   # G=2 探针（8GB 下的现实选择）
 python -m stage5_intervene.build_rft                                  # 拒绝采样造 RFT 数据
+python -m stage5_intervene.invariance --model sft --limit 24 --save   # E2：措辞不变性 / 数值响应
 python -m stage5_intervene.compare_arms --a sft_dev --b grpo_dev
 python -m stage5_intervene.verify_stage5
 ```
