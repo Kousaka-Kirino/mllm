@@ -1,0 +1,37 @@
+{
+  "run_a": "sft_dev",
+  "run_b": "sft_dev_seed23",
+  "cells": {
+    "easy_consistent": {
+      "a": 0.95,
+      "b": 0.95,
+      "delta": 0.0,
+      "n": 20
+    },
+    "easy_conflict": {
+      "a": 0.0,
+      "b": 0.0,
+      "delta": 0.0,
+      "n": 20
+    },
+    "hard_consistent": {
+      "a": 1.0,
+      "b": 1.0,
+      "delta": 0.0,
+      "n": 20
+    },
+    "hard_conflict": {
+      "a": 0.1,
+      "b": 0.05,
+      "delta": 0.05,
+      "n": 20
+    }
+  },
+  "mcnemar": {
+    "n": 80,
+    "a_only": 1,
+    "b_only": 0,
+    "delta": 0.0125,
+    "p_value": 1.0
+  }
+}

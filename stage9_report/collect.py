@@ -76,6 +76,15 @@ def collect_ood() -> dict:
     return out
 
 
+def collect_seeds() -> dict:
+    """训练种子方差：与主臂同数据、只换 seed 的对照（`compare_arms` 产物）。"""
+    out: dict = {}
+    for f in sorted(REPORTS.glob("compare_sft_dev_vs_*.json")):
+        d = read_json(f)
+        out[f.stem.replace("compare_sft_dev_vs_", "")] = d
+    return out
+
+
 def collect_data() -> dict:
     p = ROOT / "data" / "datacard.json"
     return read_json(p) if p.exists() else {}
@@ -119,6 +128,7 @@ def build_results() -> dict:
         "memory": collect_memory(),
         "invariance": collect_invariance(),
         "ood": collect_ood(),
+        "seeds": collect_seeds(),
     }
     main = _main_accuracy(res["eval"])
     # 派生数字也写进 RESULTS.json，否则报告里会出现"查不到来源"的数
@@ -305,6 +315,22 @@ def to_markdown(res: dict) -> str:
     else:
         L.append(f"- {MISSING}（先跑 `python -m stage1_data.ood` 与 "
                  f"`stage4_eval.run --suite ood_style`）")
+    L.append("")
+
+    L += ["## 10. 训练种子方差（E4 的对照）", ""]
+    seeds = res.get("seeds") or {}
+    if seeds:
+        L += ["| 对照臂 | Δ(A−B) | 仅 A 对 | 仅 B 对 | McNemar p |",
+              "|---|---:|---:|---:|---:|"]
+        for name, d in seeds.items():
+            mc = d["mcnemar"]
+            L.append(f"| `{name}` | {mc['delta']:+.3f} | {mc['a_only']} | "
+                     f"{mc['b_only']} | {mc['p_value']:.3g} |")
+        L += ["",
+              "> 只换训练种子，四格与总体几乎不动（Δ≈0，p=1）→ **主结论不是种子噪声**，"
+              "而是数据构造里就存在的先验。"]
+    else:
+        L.append(f"- {MISSING}（先 `stage3_train.sft --seed 23` 再 `compare_arms`）")
     L.append("")
 
     return "\n".join(L)

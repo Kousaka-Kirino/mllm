@@ -94,7 +94,8 @@
 2. **full 规模训练**（对齐 + SFT 各数小时）→ 得到有解释力的主结果；
 3. **干预对照跑满**（课程 / 反事实 / RFT / GRPO 各同算力）→ RQ2 的配对表；
 4. **locked_test 开封一次** → 最终数字；
-5. （可选）训练种子方差（E5 已完成：`reports/ood_sft_ood.md`）。
+5. （可选）训练种子方差 ✅ 已完成：seed 17 vs 23 → Δ +0.013、p = 1.0
+   （[compare_sft_dev_vs_sft_dev_seed23.md](reports/compare_sft_dev_vs_sft_dev_seed23.md)）。
 
 > 第 1–4 步是"把 pilot 结论升级成主结论"的唯一路径；
 > 不做也可以交付（诚实的 pilot 结论 + 完整骨架），但简历上要写清"pilot 规模"。

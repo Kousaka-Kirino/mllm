@@ -41,6 +41,9 @@
 准确率从 0.512 掉到 **0.000**，97.5% 的输出是**空串**（McNemar p = 9.1e-13）。
 237 步的 pilot 学到的是训练分布的表面统计——这条比 2×2 更能说明它有多脆。
 
+这些结论不是**种子噪声**：只换训练种子（17 → 23）重训重评，四格与总体几乎不动
+（Δ +0.013，McNemar p = 1.0，[compare_sft_dev_vs_sft_dev_seed23.md](reports/compare_sft_dev_vs_sft_dev_seed23.md)）。
+
 ---
 
 ## 一分钟跑通（CPU 即可，不下载权重）
