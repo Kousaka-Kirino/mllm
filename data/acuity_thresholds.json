@@ -1,0 +1,17 @@
+{
+  "easy_min_px_model": 6.5,
+  "mid_min_px_model": 4.5,
+  "extreme_max_px_model": 3.0,
+  "n_measurements": 636,
+  "median": 6.0,
+  "p05": 3.0,
+  "p95": 9.0,
+  "coverage": {
+    "below_extreme": 0,
+    "hard": 304,
+    "mid": 48,
+    "easy": 284
+  },
+  "rule": "easy: px >= easy_min; mid: mid_min <= px < easy_min; hard: extreme_max <= px < mid_min; extreme: px < extreme_max",
+  "source": "预注册常量（pilot 实测着墨高≈6.2×font_scale 时校准），写入即冻结"
+}

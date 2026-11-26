@@ -69,7 +69,8 @@ class RenderResult:
     categories: list[str]
     series: list[str]
     spec: ChartSpec
-    glyph_px: float               # 模型侧字形高度（input=384，未裁剪）
+    glyph_px: float               # 解析式模型侧字形高度（input=384，未裁剪）
+    measure: dict = None          # 实测统计（render(..., measure=True) 时才有）
 
     @property
     def table(self) -> dict[str, Any]:
@@ -121,7 +122,8 @@ def _values(spec: ChartSpec) -> np.ndarray:
     return vals
 
 
-def render(spec: ChartSpec, values: np.ndarray | None = None) -> RenderResult:
+def render(spec: ChartSpec, values: np.ndarray | None = None,
+           measure: bool = False) -> RenderResult:
     """渲染一张图。返回 PIL 图 + 底层数值表（答案从表里算，不从图上猜）。
 
     values: 显式指定数值表（形状 n_series × n_categories）。
@@ -196,9 +198,14 @@ def render(spec: ChartSpec, values: np.ndarray | None = None) -> RenderResult:
     if (w, h) != (spec.size, spec.size):
         img = img.resize((spec.size, spec.size), Image.LANCZOS)
 
+    meas = None
+    if measure:
+        from .measure import measure_figure
+        meas = measure_figure(fig, spec.size, input_size=384)
+
     return RenderResult(image=img, values=values, categories=categories,
                         series=series, spec=spec,
-                        glyph_px=glyph_px_modelled(spec))
+                        glyph_px=glyph_px_modelled(spec), measure=meas)
 
 
 def acuity_ladder(base: ChartSpec, target_px: tuple[float, ...] = (4, 5, 6, 7, 8, 10, 12)

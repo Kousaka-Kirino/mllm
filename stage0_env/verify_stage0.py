@@ -72,6 +72,36 @@ def main() -> int:
         require(r.returncode == 0, f"顶层引入了 torch：{r.stderr[-300:]}")
         return "picovlm 顶层无 torch 依赖"
 
+    def configs_loadable() -> str:
+        """2.0 的规矩：实验参数只从 configs/ 来，所以每份配置都必须能 load 出来。"""
+        from picovlm.config import CONFIGS, load_config
+        files = sorted(CONFIGS.glob("*.yaml"))
+        require(len(files) >= 8, f"配置太少：{len(files)} 份")
+        for f in files:
+            cfg = load_config(f.name)
+            require(isinstance(cfg, dict) and cfg, f"{f.name} 解析为空")
+        return f"{len(files)} 份配置全部可解析（含 base 链）"
+
+    def benchmark_recorded() -> str:
+        """硬件基准是 L0 的硬证据：必须有 load 和 infer 两个 suite 的实测行。"""
+        import glob
+        files = sorted(glob.glob(str(OUTPUTS / "bench" / "bench_*.json")))
+        require(files, "没有 outputs/bench/bench_*.json，先跑 python -m stage0_env.benchmark")
+        data = json.loads(open(files[-1], encoding="utf-8").read())
+        rows = data.get("rows", [])
+        suites = {r["suite"] for r in rows}
+        require({"load", "infer"} <= suites, f"bench 缺 suite：{suites}")
+        require(any(r["peak_alloc_mib"] > 0 for r in rows),
+                "全是 dry-run 数据（peak=0），要跑一次真实基准")
+        return f"{len(files)} 次基准，最新 {len(rows)} 行，dry_run={data.get('dry_run')}"
+
+    def homework_present() -> str:
+        need = ["README.md", "HW0_提示.md", "hw1_vram_budget.py", "hw2_idle_free.py"]
+        base = ROOT / "stage0_env" / "homework"
+        missing = [n for n in need if not (base / n).exists()]
+        require(not missing, f"作业缺文件 {missing}")
+        return f"{len(need)} 个作业文件齐全"
+
     return run([
         ("snapshot-readable", snapshot_readable),
         ("no-fail-checks", no_fail),
@@ -79,6 +109,9 @@ def main() -> int:
         ("gpu-recorded", gpu_recorded),
         ("disk-recorded", disk_recorded),
         ("schema-frozen", schema_frozen),
+        ("configs-loadable", configs_loadable),
+        ("benchmark-recorded", benchmark_recorded),
+        ("homework-present", homework_present),
         ("package-import", package_clean_import),
     ], title="stage0_env")
 

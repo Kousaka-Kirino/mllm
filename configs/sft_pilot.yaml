@@ -1,0 +1,14 @@
+# S3 SFT pilot：过拟合探针过了以后才用这个
+base: model.yaml
+train:
+  lr: 2.0e-4
+  batch_size: 2
+  grad_accum: 8
+  epochs: 2
+  max_steps: 800
+  warmup_ratio: 0.03
+  max_grad_norm: 1.0
+data:
+  split: train
+init_connector: outputs/ckpt/align/connector.pt
+output: outputs/ckpt/sft_pilot

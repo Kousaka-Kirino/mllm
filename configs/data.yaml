@@ -1,0 +1,30 @@
+# S1 数据引擎：pilot 先跑通，full 才谈结论。
+# 2.0 要求：正式结论的主测试集每个 2×2 格 ≥200 个独立 family（共 ≥800）。
+profiles:
+  pilot:                        # 1-2 分钟；只够验收流程，不够下结论
+    n_train: 320
+    n_val: 80
+    n_dev_test: 80
+    n_locked_test: 160
+  full:                         # 正式跑：先 build，再 validate
+    n_train: 20000
+    n_val: 2500
+    n_dev_test: 1250
+    n_locked_test: 5000
+
+split_ratio: [0.8, 0.1, 0.05, 0.05]   # train / val / dev_test / locked_test（按 family 分）
+
+render:
+  size: 1152                   # 必须是 6 的倍数：dpi = size / figsize
+  fig_inches: 6.0
+  base_pt: 9.0
+
+prior:
+  strength: 0.7                # ρ：训练集里"先验答案正好正确"的比例
+  sweep: [0.5, 0.7, 0.9]       # 只在预算允许时扫
+  types: ["position", "marginal", "numeric", "order"]
+
+acuity:
+  ladder_px: [4, 5, 6, 7, 8, 10, 12, 16]
+
+seed: 17

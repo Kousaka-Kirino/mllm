@@ -1,0 +1,7 @@
+# S8 CLI 推理：固定 checkpoint，输出答案 + 实验元数据
+base: model.yaml
+checkpoint: outputs/ckpt/sft_pilot
+prompt: "Question: {q}\nAnswer:"
+max_new_tokens: 8
+greedy: true
+output_json: false

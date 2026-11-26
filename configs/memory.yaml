@@ -1,0 +1,8 @@
+# S7 视觉记忆/检索（扩展项，不进入主结论）
+index:
+  dim: 768                     # SigLIP 池化维度
+  metric: cosine
+  source: locked_test
+retrieval:
+  top_k: [1, 5, 10]
+  answer_with_context: true

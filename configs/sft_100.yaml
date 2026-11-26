@@ -1,0 +1,15 @@
+# S3 过拟合探针：100 条样本必须能记住。记不住说明图像通路或 mask 有 bug，别急着加数据。
+base: model.yaml
+train:
+  lr: 2.0e-4
+  batch_size: 2
+  grad_accum: 4
+  epochs: 12
+  max_steps: 200
+  warmup_ratio: 0.03
+  max_grad_norm: 1.0
+data:
+  split: train
+  limit: 100
+init_connector: outputs/ckpt/align/connector.pt
+output: outputs/ckpt/sft_100

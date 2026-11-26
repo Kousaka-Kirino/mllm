@@ -1,0 +1,33 @@
+# S1 数据引擎：pilot 先跑通，full 才谈结论
+profiles:
+  pilot:                        # 1-2 分钟，够跑通全流程与验收
+    n_train: 320
+    n_val: 80
+    n_dev_test: 80
+    n_locked_test: 160
+    families_per_cell_locked: 40
+  full:                         # 正式结论用：每个 2×2 格 ≥200 个独立 family
+    n_train: 20000
+    n_val: 2500
+    n_dev_test: 1250
+    n_locked_test: 5000
+    families_per_cell_locked: 200
+
+split_ratio: [0.8, 0.1, 0.05, 0.05]   # train / val / dev_test / locked_test
+
+render:
+  size: 1152                   # 必须是 6 的倍数（figsize 6in 的 dpi）
+  fig_inches: 6.0
+  base_pt: 9.0
+  dpi: 192
+
+prior:
+  strength: 0.7                # ρ：训练集里"先验答案正好正确"的比例
+  types: ["position", "marginal", "numeric", "order"]
+
+acuity:
+  ladder_px: [4, 5, 6, 7, 8, 10, 12, 16]
+  easy_min_px_model: 9.6       # 以实测为准；这两个数写进 data/acuity_thresholds.json
+  hard_max_px_model: 5.6
+
+seed: 17

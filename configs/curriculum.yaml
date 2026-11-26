@@ -1,0 +1,17 @@
+# S5 干预臂 A：分辨率/字形课程 —— 先在易字形上学，再逐步加入难字形
+base: model.yaml
+method: curriculum
+train:
+  lr: 2.0e-4
+  batch_size: 2
+  grad_accum: 8
+  epochs: 1
+  max_steps: 800
+data:
+  split: train
+  schedule:                 # 按训练进度切换字形档位；总样本数与 SFT 臂一致
+    - {until: 0.3, glyph_px_model_min: 9.6}
+    - {until: 0.6, glyph_px_model_min: 7.2}
+    - {until: 1.0, glyph_px_model_min: 0.0}
+init_connector: outputs/ckpt/align/connector.pt
+output: outputs/ckpt/curriculum

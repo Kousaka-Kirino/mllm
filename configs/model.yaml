@@ -1,0 +1,28 @@
+# S2 模型骨架：底座版本必须钉死，否则三个月后你复现不出自己的结果。
+
+vision:
+  model: "google/siglip-base-patch16-384"
+  revision: "main"             # 换成具体 commit 前，先记录你用的是哪个
+  input_size: 384
+  patch: 16
+  freeze: true                 # 主线冻结：8GB 显存没有联合训练的空间
+
+language:
+  model: "Qwen/Qwen2.5-0.5B-Instruct"
+  revision: "main"
+  max_text_tokens: 128
+
+connector:
+  kind: "mlp"                  # mlp | resampler | pixelshuffle
+  hidden: 1024
+  n_queries: 64                # 仅 resampler
+  shuffle_factor: 2            # 仅 pixelshuffle
+
+lora:
+  r: 8                         # 2.0 建议从 8 起步，确认资源后再试 16
+  alpha: 16
+  dropout: 0.05
+  targets: ["q_proj", "k_proj", "v_proj", "o_proj"]
+
+precision: "bf16"              # 不稳就退 fp16
+grad_checkpoint: true

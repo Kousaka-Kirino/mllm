@@ -1,0 +1,8 @@
+# S6 连接器 / 视觉 token 消融（扩展项，不阻塞主线）
+candidates:
+  - {name: mlp,          kind: mlp,          tokens: 576}
+  - {name: resampler64,  kind: resampler,    tokens: 64, n_queries: 64}
+  - {name: pixelshuffle, kind: pixelshuffle, tokens: 144, factor: 2}
+eval:
+  suite: dev_test
+  max_steps: 200               # 每个候选同样的更新预算，否则比较不成立

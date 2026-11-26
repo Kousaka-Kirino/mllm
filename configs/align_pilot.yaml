@@ -1,0 +1,14 @@
+# S3 对齐探针：只训连接器，冻 ViT 与 LLM。目的是确认梯度通路和 loss 有限。
+base: model.yaml
+train:
+  lr: 1.0e-3
+  batch_size: 2
+  grad_accum: 8
+  epochs: 1
+  max_steps: 60                # 探针，不是正式训练
+  warmup_ratio: 0.03
+  max_grad_norm: 1.0
+data:
+  split: train
+  limit: 256
+output: outputs/ckpt/align

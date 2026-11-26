@@ -25,3 +25,7 @@ venv/
 .idea/
 Thumbs.db
 desktop.ini
+
+# 模型下载缓存
+.hf_cache/
+

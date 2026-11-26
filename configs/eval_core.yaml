@@ -1,0 +1,19 @@
+# S4 评测：主终点在 locked_test 上算，dev_test 只用来选配置。
+base: model.yaml
+eval:
+  splits:
+    tune: dev_test
+    report: locked_test
+  conditions: ["prior_only", "image_only", "correct_image", "mismatched_image"]
+  bootstrap:
+    n_boot: 2000
+    cluster: family            # 按 family 做整簇重采样，不按样本
+    seed: 30001
+  tests:
+    mcnemar: true
+    holm: true
+    alpha: 0.05
+  acuity_bins:
+    source: "measured_glyph_px_model"   # 用实测像素分箱，不用参数名
+    thresholds_from: "data/acuity_thresholds.json"
+  tol: 0.05                    # 数值题宽松判分的相对容差

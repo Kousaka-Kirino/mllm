@@ -1,0 +1,18 @@
+# S5 干预臂 C（可选）：冲突加权 GRPO。资源探针不通过就跳过，这是规划里允许的降级。
+base: model.yaml
+method: grpo
+train:
+  lr: 1.0e-5
+  group_size: 4                # 8GB 先 G=2 探针，G=4 再试
+  max_steps: 60
+  max_new_tokens: 8
+  clip: 0.2
+  temperature: 0.9
+reward:
+  w_correct: 1.0
+  w_format: 0.2
+  w_conflict: 1.0              # 冲突格额外加分：奖励"看图像"而不是"背先验"
+rft:
+  enabled: true                # 必须留这条对照，否则无法区分"筛选"与"RL"
+  samples_per_rollout: 1       # 同 rollout 池里每个 prompt 取一个正确样本
+output: outputs/ckpt/grpo

@@ -83,3 +83,70 @@ class EvalConfig:
         "easy_consistent", "easy_conflict", "hard_consistent", "hard_conflict",
         "chartqa", "textvqa", "ood_style",
     ))
+
+
+# --------------------------------------------------------------------------
+# 配置文件：所有阶段脚本都从 configs/*.yaml 读参数，不在代码里写死超参。
+# 2.0 的规矩：一次实验 = 一份配置 + 一个种子 + 一份日志，三者缺一不可。
+# --------------------------------------------------------------------------
+
+CONFIGS = ROOT / "configs"
+
+
+def load_yaml(path: str | Path) -> dict:
+    """读一个 YAML。文件不存在时抛 FileNotFoundError，不静默返回空 dict。"""
+    import yaml
+    path = Path(path)
+    if not path.is_absolute():
+        path = CONFIGS / path
+    with open(path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return data or {}
+
+
+def deep_merge(base: dict, over: dict) -> dict:
+    """后者覆盖前者；嵌套 dict 递归合并，list 整体替换。"""
+    out = dict(base)
+    for k, v in over.items():
+        if isinstance(v, dict) and isinstance(out.get(k), dict):
+            out[k] = deep_merge(out[k], v)
+        else:
+            out[k] = v
+    return out
+
+
+def load_config(name: str | Path, _depth: int = 0) -> dict:
+    """加载配置，并沿 `base:` 字段向上合并。
+
+    例：`configs/align_pilot.yaml` 里写 `base: model.yaml`，
+    则返回 model.yaml 的键 + align_pilot 自己的键。
+    """
+    if _depth > 5:
+        raise ValueError(f"配置 base 链太深，可能有环：{name}")
+    cfg = load_yaml(name)
+    base = cfg.pop("base", None)
+    if base:
+        cfg = deep_merge(load_config(base, _depth + 1), cfg)
+    return cfg
+
+
+def model_config_from(cfg: dict) -> "ModelConfig":
+    """从 model.yaml 风格的 dict 造 ModelConfig。"""
+    vision = cfg.get("vision", {})
+    lang = cfg.get("language", {})
+    conn = cfg.get("connector", {})
+    lora = cfg.get("lora", {})
+    return ModelConfig(
+        vision=vision.get("model", ModelConfig.vision),
+        llm=lang.get("model", ModelConfig.llm),
+        input_size=vision.get("input_size", ModelConfig.input_size),
+        patch=vision.get("patch", ModelConfig.patch),
+        connector=conn.get("kind", ModelConfig.connector),
+        n_queries=conn.get("n_queries", ModelConfig.n_queries),
+        shuffle_factor=conn.get("shuffle_factor", ModelConfig.shuffle_factor),
+        freeze_vision=vision.get("freeze", ModelConfig.freeze_vision),
+        lora_r=lora.get("r", ModelConfig.lora_r),
+        lora_alpha=lora.get("alpha", ModelConfig.lora_alpha),
+        lora_dropout=lora.get("dropout", ModelConfig.lora_dropout),
+        max_text_tokens=lang.get("max_text_tokens", ModelConfig.max_text_tokens),
+    )
