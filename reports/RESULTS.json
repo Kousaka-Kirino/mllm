@@ -1,5 +1,5 @@
 {
-  "stamp": "20261126T010342Z",
+  "stamp": "20261126T010743Z",
   "data": {
     "profile": "pilot",
     "seed": 17,
@@ -3019,6 +3019,29 @@
         },
         "delta_salient_minus_full": -0.04166666666666674
       }
+    }
+  },
+  "invariance": {
+    "sft": {
+      "model": "sft",
+      "split": "dev_test",
+      "stamp": "20261126T010711Z",
+      "n_wording": 6,
+      "unchanged_on_wording": 6,
+      "invariance_rate": 1.0,
+      "invariance_ci": [
+        0.6096657120978346,
+        1.0
+      ],
+      "n_numeric": 6,
+      "response_on_numeric": 0,
+      "response_rate": 0.0,
+      "response_ci": [
+        0.0,
+        0.3903342879021653
+      ],
+      "stuck_on_old": 5,
+      "stuck_rate": 0.8333333333333334
     }
   },
   "main": {

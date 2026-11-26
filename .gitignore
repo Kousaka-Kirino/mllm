@@ -1,5 +1,6 @@
 # 数据与产物：不进仓库，由代码 + 种子重建
 data/synth/
+data/full/
 data/images/
 data/*.jsonl
 data/datacard.json

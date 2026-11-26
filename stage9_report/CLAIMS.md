@@ -18,7 +18,8 @@
 | 11 | 放大"字最密"的块 → 不提升，说明 acuity 不是瓶颈 | full 0.583 / salient 0.542（Δ −0.042，不显著） | `reports/memory_*.md` |
 | 12 | 页内检索（冻结 SigLIP + 平均池化）不足 | recall@1 0.083 [0.023, 0.258] | `reports/memory_*.md` |
 | 13 | GRPO 组内优势在 pilot 上信号稀疏（诚实负结果） | 6 组中 5 组整组同分 → 优势为 0 | `outputs/grpo/*.json` |
-| 14 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
+| 14 | E2 反事实：改问句不变、改数值不响应（探索性，n=6） | 不变性 1.000 [0.610,1.000]；响应 0.000；仍答旧答案 0.833 | `outputs/eval/invariance_sft.json` |
+| 15 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
 
 ## 三条写简历的规矩
 

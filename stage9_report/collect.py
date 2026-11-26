@@ -58,6 +58,15 @@ def collect_memory() -> dict:
     return {"file": f.name, "result": read_json(f)}
 
 
+def collect_invariance() -> dict:
+    """E2：反事实不变性 / 数值响应（S5 的 `invariance.py` 产物）。"""
+    out: dict = {}
+    for f in sorted((OUTPUTS / "eval").glob("invariance_*.json")):
+        d = read_json(f)
+        out[d.get("model", f.stem)] = {k: v for k, v in d.items() if k != "rows"}
+    return out
+
+
 def collect_data() -> dict:
     p = ROOT / "data" / "datacard.json"
     return read_json(p) if p.exists() else {}
@@ -99,6 +108,7 @@ def build_results() -> dict:
         "eval": collect_eval(),
         "bench": collect_bench(),
         "memory": collect_memory(),
+        "invariance": collect_invariance(),
     }
     main = _main_accuracy(res["eval"])
     # 派生数字也写进 RESULTS.json，否则报告里会出现"查不到来源"的数
@@ -245,6 +255,26 @@ def to_markdown(res: dict) -> str:
           "4. **检索未达标**：冻结 SigLIP 平均池化的 recall@1 很低（S7）。",
           "",
           "> 以上四条与 `reports/RESULTS.json` 一一对应；缺项的写 MISSING，不补。", ""]
+    L += ["## 8. E2 反事实（探索性）", ""]
+    inv = res.get("invariance") or {}
+    if inv:
+        L += ["| model | 措辞不变性率 | 数值响应率 | 仍答旧答案 |",
+              "|---|---:|---:|---:|"]
+        for model, v in inv.items():
+            def _p(x):
+                return MISSING if x is None else f"{x:.3f}"
+            L.append(f"| {model} | {_p(v.get('invariance_rate'))} "
+                     f"(n={v.get('n_wording', MISSING)}) | "
+                     f"{_p(v.get('response_rate'))} (n={v.get('n_numeric', MISSING)}) | "
+                     f"{_p(v.get('stuck_rate'))} |")
+        L += ["",
+              "> 只改问句时答案几乎不变（不变性率高），但把表里的数值改掉、金标换人后，"
+              "模型仍答旧答案（响应率 0）→ 它读的是题面与先验，不是图。",
+              "> n 很小（数值变体只支持 maxcat），**探索性**，不进主结论。"]
+    else:
+        L.append(f"- {MISSING}（先跑 `python -m stage5_intervene.invariance --save`）")
+    L.append("")
+
     return "\n".join(L)
 
 
