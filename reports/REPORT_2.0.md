@@ -1,6 +1,6 @@
 # PicoVLM · 结果汇总（自动生成）
 
-生成时间：20261126T010743Z
+生成时间：20261126T020304Z
 
 > 本文件由 `python -m stage9_report.collect` 生成，不要手改。
 > 每个数字都能在 `reports/RESULTS.json` 与 `outputs/` 里找到来源。
@@ -50,7 +50,7 @@
 | sanity-oracle | neutral | 24 | 1.000 | [0.862, 1.000] |
 | sft_dev | easy_conflict | 20 | 0.000 | [0.000, 0.161] |
 | sft_dev | easy_consistent | 20 | 0.950 | [0.764, 0.991] |
-| sft_dev | hard_conflict | 20 | 0.050 | [0.009, 0.236] |
+| sft_dev | hard_conflict | 20 | 0.100 | [0.028, 0.301] |
 | sft_dev | hard_consistent | 20 | 1.000 | [0.839, 1.000] |
 | verify-oracle | easy_conflict | 24 | 1.000 | [0.862, 1.000] |
 | verify-oracle | easy_consistent | 24 | 1.000 | [0.862, 1.000] |
@@ -78,14 +78,14 @@
 | prior_dev | prior_only | easy_consistent | 20 | 1.000 |
 | prior_dev | prior_only | hard_conflict | 20 | 0.000 |
 | prior_dev | prior_only | hard_consistent | 20 | 1.000 |
-| sft_dev | mismatched_image | easy_conflict | 20 | 0.000 |
+| sft_dev | mismatched_image | easy_conflict | 20 | 0.050 |
 | sft_dev | mismatched_image | easy_consistent | 20 | 0.950 |
 | sft_dev | mismatched_image | hard_conflict | 20 | 0.050 |
 | sft_dev | mismatched_image | hard_consistent | 20 | 1.000 |
-| sft_dev | prior_only | easy_conflict | 20 | 0.100 |
-| sft_dev | prior_only | easy_consistent | 20 | 0.250 |
-| sft_dev | prior_only | hard_conflict | 20 | 0.000 |
-| sft_dev | prior_only | hard_consistent | 20 | 0.200 |
+| sft_dev | prior_only | easy_conflict | 20 | 0.150 |
+| sft_dev | prior_only | easy_consistent | 20 | 0.100 |
+| sft_dev | prior_only | hard_conflict | 20 | 0.150 |
+| sft_dev | prior_only | hard_consistent | 20 | 0.150 |
 | verify_prior | image_only | easy_conflict | 20 | 0.000 |
 | verify_prior | image_only | easy_consistent | 20 | 1.000 |
 | verify_prior | image_only | hard_conflict | 20 | 0.000 |
@@ -105,7 +105,7 @@
 
 **sanity-oracle**：prior_effect +0.000，acuity_effect +0.000，interaction +0.000，VDR MISSING
 
-**sft_dev**：prior_effect +0.950，acuity_effect -0.050，interaction +0.000，VDR easy 0.000 / hard 0.050
+**sft_dev**：prior_effect +0.950，acuity_effect -0.050，interaction +0.050，VDR easy 0.000 / hard 0.100
 - bootstrap（2000 次，按 family）：prior_effect +0.950 [+0.833, +1.000]
 
 **verify-oracle**：prior_effect +0.000，acuity_effect +0.000，interaction +0.000，VDR MISSING
@@ -117,7 +117,7 @@
 
 | 连接器 | token | 参数(M) | 延迟(ms) | 峰值(MiB) | 精度 |
 |---|---:|---:|---:|---:|---|
-| mlp | 576 | 2.30 | 76 | 1340 | 0.500（correct_image, 80 条） |
+| mlp | 576 | 2.30 | 76 | 1340 | 0.512（correct_image, 80 条） |
 | resampler | 64 | 20.04 | 40 | 1219 | 未训练（不报） |
 | pixelshuffle | 144 | 2.75 | 41 | 1207 | 未训练（不报） |
 

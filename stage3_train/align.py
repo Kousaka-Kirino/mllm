@@ -116,6 +116,9 @@ def main(argv: list[str] | None = None) -> int:
     clip = float(tr.get("max_grad_norm", 1.0))
     limit = args.limit if args.limit is not None else cfg.get("data", {}).get("limit")
     out_dir = Path(args.out or cfg.get("output", "outputs/ckpt/align"))
+    if args.dry_run and args.out is None:
+        # 同 sft.py：dry-run 用替身模型，不能写进真 checkpoint 目录。
+        out_dir = Path("outputs/ckpt/_dryrun")
     if not out_dir.is_absolute():
         out_dir = OUTPUTS.parent / out_dir
     run_dir = ensure_dir(OUTPUTS / "train" / f"align_{utc_stamp()}")

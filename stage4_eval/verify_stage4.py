@@ -57,6 +57,23 @@ def check_two_by_two() -> str:
     return "prior_effect=+1.000 acuity_effect=0.000 vdr=0.000"
 
 
+def check_mismatch_test() -> str:
+    """SFT 那一轮的报告里必须有"换图检验"（同实例 McNemar），否则结论没依据。"""
+    p = OUTPUTS / "eval" / "sft_dev" / "grid.json"
+    if not p.exists():
+        raise Skip("没有 sft_dev 的 grid.json（先跑 stage4_eval.run --model sft）")
+    import json
+
+    grid = json.loads(p.read_text(encoding="utf-8"))
+    cm = grid.get("mcnemar_mismatch")
+    if not cm:
+        raise Skip("该轮只跑了单个 condition，没有换图检验")
+    require(cm["n"] > 0, "换图检验的 n 为 0")
+    require(0.0 <= cm["p_value"] <= 1.0, "p 值越界")
+    return (f"n={cm['n']} correct_only={cm['correct_image_only']} "
+            f"mismatched_only={cm['mismatched_image_only']} p={cm['p_value']:.4g}")
+
+
 def check_records() -> str:
     import json
 
@@ -129,6 +146,7 @@ def main() -> int:
         ("mcnemar", check_mcnemar),
         ("report-written", check_report),
         ("sft-run", check_sft_run),
+        ("mismatch-test", check_mismatch_test),
     ], "S4 验收（2.0）")
 
 

@@ -14,7 +14,8 @@ from picovlm.io_utils import ensure_dir, write_json
 
 from stage3_train.dataset import load_samples
 from stage4_eval.analyse import (bootstrap_effect, cell_accuracy, effects,
-                                 load_run, mcnemar_vs, to_markdown)
+                                 load_run, mcnemar_conditions, mcnemar_vs,
+                                 to_markdown)
 
 
 def build(run_id: str, baseline: str | None = None, suite: str = "dev_test") -> str:
@@ -42,6 +43,21 @@ def build(run_id: str, baseline: str | None = None, suite: str = "dev_test") -> 
           f"- 判分：宽松口径（数值容差 5%），同时报表严格口径",
           ""]
     md.append(to_markdown(run_id, cells, eff, boot))
+
+    conds = {p["condition"] for p in preds}
+    if {"correct_image", "mismatched_image"} <= conds:
+        cm = mcnemar_conditions(preds, "correct_image", "mismatched_image")
+        grid["mcnemar_mismatch"] = cm
+        write_json(OUTPUTS / "eval" / run_id / "grid.json", grid)
+        md += ["", "### 换图检验：`correct_image` vs `mismatched_image`（同实例）", "",
+               f"- 共同样本 n={cm['n']}，仅正确图对 {cm['correct_image_only']}，"
+               f"仅错配图对 {cm['mismatched_image_only']}",
+               f"- 准确率 {cm['acc_a']:.3f} vs {cm['acc_b']:.3f}，"
+               f"McNemar 精确检验 **p={cm['p_value']:.4g}**",
+               "",
+               "> p 大 → 换掉图答案没变 → 模型不是靠图作答。这条比「冲突格准确率低」"
+               "更硬：它不依赖模型是否理解冲突。"]
+
     if baseline:
         base = load_run(baseline)
         mc = mcnemar_vs(preds, base)

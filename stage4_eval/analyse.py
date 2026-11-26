@@ -123,6 +123,26 @@ def mcnemar_vs(preds_a: list[dict], preds_b: list[dict],
             "p_value": p}
 
 
+def mcnemar_conditions(preds: list[dict], cond_a: str, cond_b: str) -> dict:
+    """同一批样本、同一条预测流里比较两个**条件**（correct_image vs mismatched_image）。
+
+    和 `mcnemar_vs` 的区别：那个比两个模型，这个比同一个模型的两种输入。
+    "换图不掉点"这条结论就是靠它给的 p 值，不是靠肉眼看两张表差不多。
+    """
+    a = {p["sample_id"]: bool(p["correct_relaxed"])
+         for p in preds if p["condition"] == cond_a}
+    b = {p["sample_id"]: bool(p["correct_relaxed"])
+         for p in preds if p["condition"] == cond_b}
+    keys = set(a) & set(b)
+    a_only = sum(1 for k in keys if a[k] and not b[k])
+    b_only = sum(1 for k in keys if b[k] and not a[k])
+    return {"cond_a": cond_a, "cond_b": cond_b, "n": len(keys),
+            f"{cond_a}_only": a_only, f"{cond_b}_only": b_only,
+            "acc_a": sum(a[k] for k in keys) / max(len(keys), 1),
+            "acc_b": sum(b[k] for k in keys) / max(len(keys), 1),
+            "p_value": mcnemar_exact(a_only, b_only)}
+
+
 def to_markdown(name: str, cells: dict, eff: dict, boot: dict | None = None) -> str:
     lines = [f"### {name}", "", "| 格 | n | 族 | acc | 95% Wilson |",
              "|---|---:|---:|---:|---|"]

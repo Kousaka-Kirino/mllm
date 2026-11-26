@@ -22,6 +22,7 @@ from picovlm.answers import is_correct
 from picovlm.config import OUTPUTS, load_config, model_config_from
 from picovlm.io_utils import ensure_dir, utc_stamp, write_json
 from picovlm.model.vlm import PicoVLM
+from picovlm.seeds import seed_everything
 
 from .align import build_model, make_loader, to_device
 from .dataset import EOS_SUFFIX
@@ -101,9 +102,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", default=None)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--device", default=None)
+    ap.add_argument("--seed", type=int, default=None,
+                    help="训练种子（默认取 configs 里的 seed；换种子=换一条训练轨迹，"
+                         "用来量训练随机性）")
     args = ap.parse_args(argv)
 
     cfg = load_config(args.config)
+    seed = int(args.seed if args.seed is not None else cfg.get("seed", 17))
+    seed_everything(seed)
     tr = dict(cfg.get("train", {}))
     for key, val in (("epochs", args.epochs), ("max_steps", args.max_steps),
                      ("lr", args.lr), ("batch_size", args.batch_size),
@@ -120,6 +126,10 @@ def main(argv: list[str] | None = None) -> int:
     limit = args.limit if args.limit is not None else cfg.get("data", {}).get("limit")
     init_ckpt = args.init_connector or cfg.get("init_connector")
     out_dir = Path(args.out or cfg.get("output", "outputs/ckpt/sft_pilot"))
+    if args.dry_run and args.out is None:
+        # dry-run 用替身模型，绝不能写进真 checkpoint 目录——
+        # 否则一次 `--dry-run` 就会把训练好的连接器覆盖成随机初始化。
+        out_dir = Path("outputs/ckpt/_dryrun")
     if not out_dir.is_absolute():
         out_dir = OUTPUTS.parent / out_dir
     run_dir = ensure_dir(OUTPUTS / "train" / f"sft_{utc_stamp()}")
@@ -210,7 +220,7 @@ def main(argv: list[str] | None = None) -> int:
         "config": args.config, "lr": lr, "bs": bsz, "accum": accum,
         "epochs": epochs, "max_steps": max_steps, "trainable_params": n_train,
         "lora_params": n_lora, "init_connector": str(init_ckpt),
-        "dry_run": args.dry_run,
+        "dry_run": args.dry_run, "seed": seed, "steps_done": step,
     })
     print(f"saved {out_dir}  (connector.pt + lora/)")
     return 0
