@@ -64,8 +64,14 @@ S2 的 `real-weights` 检查在没加 `--load` 时会 SKIP（不下载 1.5GB 权
 | 文件 | 作用 | 关键函数 |
 |---|---|---|
 | `run_all.py` | 一键矩阵 | `STAGES`（10 项）、`run_stage`、`main` |
+| `verify.py` | 分级矩阵（`--profile core|full`） | `PROFILE_ARGS`、`main` |
 | `cli.py` | 交付 CLI | `main` |
 | `verify_stage8.py` | 本阶段验收 | 6 项检查 |
+
+`run_all` 与 `verify` 的区别只有一处：**成本档位**。`--profile core` 跳过需要
+1.5GB 真权重的 S2（它自己会 SKIP），`--profile full` 给 S2 补 `--load`。
+用 `--only` 时结果写进 `acceptance_partial.md`，不会覆盖全量矩阵——否则
+`acceptance-if-present` 这条检查会以为矩阵只剩一行。
 
 `STAGES` 是一个 `(阶段名, 模块路径, 中文说明)` 的列表。**它是这个项目的
 "总目录"**：想知道"这个项目有哪些证据"，看这十行就够了。

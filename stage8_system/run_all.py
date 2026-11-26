@@ -34,8 +34,9 @@ STAGES: list[tuple[str, str, str]] = [
 COUNT_RE = re.compile(r"-- PASS (\d+) / FAIL (\d+) / SKIP (\d+) --")
 
 
-def run_stage(module: str) -> tuple[int, int, int, str]:
-    proc = subprocess.run([sys.executable, "-m", module], capture_output=True,
+def run_stage(module: str, extra: list[str] | None = None) -> tuple[int, int, int, str]:
+    proc = subprocess.run([sys.executable, "-m", module, *(extra or [])],
+                          capture_output=True,
                           text=True, encoding="utf-8", errors="replace")
     out = (proc.stdout or "") + (proc.stderr or "")
     m = COUNT_RE.search(out)

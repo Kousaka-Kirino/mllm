@@ -93,6 +93,7 @@ stage5_intervene/
 ├── counterfactual.py  # 措辞/数值变体
 ├── grpo.py            # reward / advantages / logprob / clip / rollout
 ├── rft.py             # 拒绝采样微调的数据构造
+├── build_rft.py       # RFT 数据的命令行入口（--model/--split/--group-size）
 ├── train.py           # 三种臂的统一入口（--method）
 ├── compare_arms.py    # 逐格配对 + McNemar
 └── verify_stage5.py
@@ -102,6 +103,7 @@ stage5_intervene/
 python -m stage5_intervene.train --method curriculum --steps 40
 python -m stage5_intervene.train --method counterfactual --steps 40
 python -m stage5_intervene.train --method grpo --steps 10 --group-size 2
+python -m stage5_intervene.build_rft --model sft --limit 40 --group-size 4
 python -m stage5_intervene.compare_arms --a sft_dev --b grpo_dev
 python -m stage5_intervene.verify_stage5
 ```
