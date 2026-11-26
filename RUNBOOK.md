@@ -144,6 +144,7 @@ python -m stage8_system.run_all                 # 同上 + 写 acceptance.md/jso
 
 ```bash
 python -m stage9_report.collect          # -> reports/RESULTS.json + REPORT_2.0.md
+python -m stage9_report.figures           # -> reports/figs/fig_2x2.png, fig_cost.png
 python -m stage9_report.verify_stage9
 ```
 

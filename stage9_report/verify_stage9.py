@@ -87,12 +87,23 @@ def c_claims() -> str:
     return f"{len(rows) - 2} 条声明均带来源"
 
 
+def c_figures() -> str:
+    figs = sorted((REPORTS / "figs").glob("*.png"))
+    if not figs:
+        raise Skip("没有 reports/figs/*.png（先跑 python -m stage9_report.figures）")
+    require(len(figs) >= 2, f"图太少：{len(figs)} 张")
+    for p in figs:
+        require(p.stat().st_size > 5_000, f"图太小（可能没画出来）：{p.name}")
+    return f"{len(figs)} 张图：{', '.join(p.name for p in figs)}"
+
+
 def main() -> int:
     return run([
         ("results-json", c_results),
         ("report-sections", c_sections),
         ("numbers-traceable", c_traceable),
         ("claims-table", c_claims),
+        ("figures", c_figures),
     ], "S9 验收（2.0）")
 
 

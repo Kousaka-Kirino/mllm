@@ -45,6 +45,7 @@ python -m stage1_data.verify_stage1                     # 14 项数据验收
 python -m stage2_model.verify_stage2                    # 连接器 / loss 掩码 / 前向
 python -m stage4_eval.run --model prior --suite dev_test # 盲基线答题（0 显存）
 python -m stage9_report.collect                         # 汇总 -> reports/REPORT_2.0.md
+python -m stage9_report.figures                         # 出图 -> reports/figs/*.png
 python -m stage8_system.run_all                         # 全阶段验收矩阵（也可用 verify --profile core）
 ```
 
