@@ -113,6 +113,7 @@ python -m stage4_eval.report --run-id sft_dev --baseline prior_dev
 python -m stage1_data.ood                                # E5：同批题换画风
 python -m stage4_eval.run --model sft --suite ood_style --run-id sft_ood
 python -m stage4_eval.ood --in-domain sft_dev --ood sft_ood
+python -m stage4_eval.unseal --model sft --run-id final_locked   # locked_test 只开一次
 python -m stage4_eval.verify_stage4
 ```
 
@@ -121,8 +122,14 @@ python -m stage4_eval.verify_stage4
 ```
 outputs/eval/<run_id>/predictions.jsonl   # 每条预测：raw/norm/两套判分/condition/family
 outputs/eval/<run_id>/records.json        # 按 (condition, 格) 聚合：n/acc/Wilson/族数
+outputs/eval/<run_id>/UNSEALED.json       # 只有 locked_test 有：时间/git commit/预测 sha256
 reports/eval_<run_id>.md                  # 四格 + 效应量 + bootstrap + McNemar
 ```
+
+**`unseal.py` 不是多此一举**：`locked_test` 的全部价值在"只开一次"。随手能跑，
+人就会边调边看，held-out 就成了第二个 dev_test。这个入口第二次直接拒绝执行
+（除非 `--force`），并把开封记录固化成文件——报告里那句"held-out 只开过一次"
+才有证据。
 
 ---
 

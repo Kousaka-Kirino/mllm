@@ -147,6 +147,7 @@ python -m picovlm.cli --image data/synth/images/x.png --ask "Which category has 
 
 | 想知道 | 看 |
 |---|---|
+| **这个项目讲给面试官听**（设计/架构/亮点/适配方向） | [PROJECT_INTRO.md](PROJECT_INTRO.md) |
 | 项目怎么一步步做、时间怎么排 | [PicoVLM 项目规划 2.0.md](PicoVLM%20项目规划%202.0.md) |
 | 每个命令干什么、要多久、吃多少显存 | [RUNBOOK.md](RUNBOOK.md) |
 | 实验结论与数字 | [reports/REPORT_2.0.md](reports/REPORT_2.0.md) |

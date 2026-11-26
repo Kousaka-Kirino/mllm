@@ -1,0 +1,13 @@
+# S3 对齐（full 规模）：19,998 条 train，1 epoch，只训连接器。
+# 显存账：与 pilot 相同的 bs=2/accum=8，pilot 峰值 3508 MiB；这里数据变大不影响峰值。
+base: model.yaml
+train:
+  lr: 1.0e-3
+  batch_size: 2
+  grad_accum: 8
+  epochs: 1
+  warmup_ratio: 0.03
+  max_grad_norm: 1.0
+data:
+  split: train
+output: outputs/ckpt/align_full

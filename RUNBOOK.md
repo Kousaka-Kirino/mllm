@@ -73,6 +73,18 @@ python -m stage3_train.verify_stage3 --load
 > pilot 规模下 237 步就收敛到一个"会答题但走先验"的解 —— 这正是本项目要研究的现象，
 > 不是 bug。要看"能不能学会看图"，需要 `--profile full` 的数据和更长的训练。
 
+### full 规模重训（约 1.5 小时，24GB 内存 + 6GB 显存）
+
+```bash
+python -m stage1_data.build --profile full --seed 17 --out data/full   # 建数据，~45 分钟
+$env:PICOVLM_DATA="D:\TheZe\复试项目\mLLM\data\full"                    # 后续命令都读 full
+python -m stage3_train.align --config align_full.yaml                  # 19,998 条 1 epoch，~45 分钟
+python -m stage3_train.sft   --config sft_full.yaml                    # 2 epoch，~50 分钟
+```
+
+产物：`outputs/ckpt/align_full/connector.pt`、`outputs/ckpt/sft_full/{connector.pt,lora/}`。
+bs=1/accum=16 是为了压住激活峰值（full 对齐这一步已见 5848 MiB）。
+
 ---
 
 ## S4 评测（实测：80 条 × 4 条件约 3 分钟）
@@ -85,6 +97,18 @@ python -m stage4_eval.verify_stage4
 ```
 
 产物：`outputs/eval/<run>/{predictions.jsonl,records.json,grid.json}`、`reports/eval_<run>.md`
+
+**locked_test 开封只走这一个入口**（第二次会被拒绝，除非 `--force`）：
+
+```bash
+python -m stage4_eval.unseal --model sft \
+    --connector outputs/ckpt/sft_full/connector.pt \
+    --adapter   outputs/ckpt/sft_full/lora \
+    --conditions correct_image,mismatched_image,prior_only \
+    --run-id final_locked --reason "final report"
+```
+
+它会在 `outputs/eval/final_locked/UNSEALED.json` 记下时间、git commit、预测文件 sha256。
 
 ---
 

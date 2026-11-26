@@ -1,0 +1,16 @@
+# S3 SFT（full 规模）：19,998 条 train、2 epoch；从 full 对齐的连接器起步。
+# 显存：pilot 用 bs=2/accum=8 峰值 6392 MiB；full 对齐这一步已见 5848 MiB，
+# 为避免 OOM 改成 bs=1/accum=16（同一个 effective batch，激活峰值更低）。
+base: model.yaml
+train:
+  lr: 2.0e-4
+  batch_size: 1
+  grad_accum: 16
+  epochs: 2
+  max_steps: 0
+  warmup_ratio: 0.03
+  max_grad_norm: 1.0
+data:
+  split: train
+init_connector: outputs/ckpt/align_full/connector.pt
+output: outputs/ckpt/sft_full
