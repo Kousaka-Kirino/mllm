@@ -21,6 +21,17 @@ PROMPT = "Question: {q}\nAnswer:"
 EOS_SUFFIX = "\n"
 
 
+def answer_with_eos(tok, answer: str) -> str:
+    """答案后面接**真正的 EOS**，模型才学得会"说完就停"。
+
+    早期版本用 `"\\n"` 当结尾，结果模型答出 "A" 之后继续写
+    "\\nSolving for:ln("——评测算错，GRPO 的格式分也永远是 0。
+    tokenizer 有 eos_token 就用它，没有才退回换行。
+    """
+    eos = getattr(tok, "eos_token", None)
+    return answer + (eos if eos else EOS_SUFFIX)
+
+
 def load_samples(split: str = "train", root: Path | None = None,
                  limit: int | None = None) -> list[Sample]:
     root = Path(root or DATA / "synth")
@@ -68,7 +79,7 @@ class ChartSFT:
         s = self.samples[i]
         prompt_ids = self.tok(PROMPT.format(q=s.question),
                               add_special_tokens=False)["input_ids"]
-        answer_ids = self.tok(s.answer + EOS_SUFFIX,
+        answer_ids = self.tok(answer_with_eos(self.tok, s.answer),
                               add_special_tokens=False)["input_ids"]
         input_ids = prompt_ids + answer_ids
         labels = [-100] * len(prompt_ids) + list(answer_ids)

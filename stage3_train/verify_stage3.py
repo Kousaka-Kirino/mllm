@@ -19,7 +19,8 @@ import torch
 from picovlm.config import OUTPUTS, ROOT
 from picovlm.report import Skip, approx, require, run
 
-from .dataset import EOS_SUFFIX, PROMPT, ChartSFT, collate, load_samples
+from .dataset import (EOS_SUFFIX, PROMPT, ChartSFT, answer_with_eos, collate,
+                      load_samples)
 
 
 def py(*args: str, timeout: int = 900) -> subprocess.CompletedProcess:
@@ -43,9 +44,9 @@ def check_dataset() -> str:
     ids, lab = item["input_ids"], item["labels"]
     require(len(ids) == len(lab), "input_ids/labels 长度不一致")
     n_sup = sum(1 for x in lab if x != -100)
-    require(n_sup == len(tok(samples[0].answer + EOS_SUFFIX,
-                             add_special_tokens=False)["input_ids"]),
-            f"监督位数 {n_sup} 不等于答案 token 数")
+    want = len(tok(answer_with_eos(tok, samples[0].answer),
+                   add_special_tokens=False)["input_ids"])
+    require(n_sup == want, f"监督位数 {n_sup} 不等于答案 token 数 {want}")
     require(all(x == -100 for x in lab[:len(lab) - n_sup]), "prompt 段没有全部 -100")
     require(lab[-1] != -100, "答案末尾（EOS）没有被监督")
     return f"sample={samples[0].id} seq={len(ids)} supervised={n_sup}"

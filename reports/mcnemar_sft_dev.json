@@ -1,7 +1,7 @@
 {
   "n": 80,
-  "a_only": 3,
-  "b_only": 10,
-  "delta": -0.0875,
-  "p_value": 0.09228515625
+  "a_only": 1,
+  "b_only": 1,
+  "delta": 0.0,
+  "p_value": 1.0
 }
