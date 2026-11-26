@@ -1,5 +1,5 @@
 {
-  "stamp": "20261126T032135Z",
+  "stamp": "20261126T033408Z",
   "data": {
     "profile": "pilot",
     "seed": 17,
@@ -3080,7 +3080,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 14.245000000000001,
+          "latency_ms_mean": 11.85,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -3107,7 +3107,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.605,
+          "latency_ms_mean": 11.734999999999998,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -3134,7 +3134,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.745,
+          "latency_ms_mean": 12.169999999999998,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -3161,7 +3161,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.459999999999997,
+          "latency_ms_mean": 10.16,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -3188,7 +3188,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.469999999999995,
+          "latency_ms_mean": 11.200000000000001,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -3215,7 +3215,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 15.525,
+          "latency_ms_mean": 11.775000000000002,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -3242,7 +3242,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.929999999999998,
+          "latency_ms_mean": 11.06,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -3269,7 +3269,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.09,
+          "latency_ms_mean": 11.88,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -3296,7 +3296,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.255,
+          "latency_ms_mean": 10.715000000000003,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -3323,7 +3323,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.25,
+          "latency_ms_mean": 11.330000000000002,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -3350,7 +3350,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.66,
+          "latency_ms_mean": 11.075000000000001,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -3377,7 +3377,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.19,
+          "latency_ms_mean": 11.184999999999999,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -3404,7 +3404,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 0.0,
+          "latency_ms_mean": 0.185,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -3485,7 +3485,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 0.45999999999999996,
+          "latency_ms_mean": 0.0,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,

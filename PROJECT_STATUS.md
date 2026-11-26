@@ -11,10 +11,28 @@
 |---|---|---|
 | 十阶段目录 + 每阶段 README 讲解 | ✅ | `stage*/README.md`，`stage8_system.verify_stage8` 的 `stage-docs` |
 | 每阶段 homework 题目 + 骨架 + 答案 | ✅ | `stage*/homework/{README.md,hw*.py,HWx_提示.md}` |
-| 一键验收矩阵 | ✅ | `python -m stage8_system.run_all` → **73 PASS / 0 FAIL / 1 SKIP**，`outputs/acceptance.md` |
+| 一键验收矩阵 | ✅ | `python -m stage8_system.verify --profile full` → **77 PASS / 0 FAIL / 0 SKIP**；`--profile core`（跳过 S2 真权重）→ 76 PASS / 0 FAIL / 1 SKIP；`outputs/acceptance.md` |
 | pytest | ✅ | 29 passed |
 | 配置外置（不改代码改参数） | ✅ | `configs/*.yaml`（14 份，支持 `base:` 继承），`verify_stage0` 的 `configs-loadable` |
 | GitHub 分阶段推送 | ✅ | `origin/main` 上 S0→S9 各一个 commit |
+
+### 各阶段交付物（逐目录核对，`--profile full` 实测）
+
+| 阶段 | 目录 | 主入口 | README | 作业 | 答案 | verify |
+|---|---|---|---|---|---|---|
+| S0 | `stage0_env/` | `check` / `benchmark` | ✅ | 2 题 | `HW0_提示.md` | 10 PASS |
+| S1 | `stage1_data/` | `build` / `validate` | ✅ | 2 题 | `HW1_提示.md` | 14 PASS |
+| S2 | `stage2_model/` | `smoke` / `check_loss_mask` | ✅ | 2 题 | `HW2_提示.md` | 7 PASS |
+| S3 | `stage3_train/` | `align` / `sft` | ✅ | 2 题 | `HW3_提示.md` | 7 PASS |
+| S4 | `stage4_eval/` | `run` / `report` / `ood` | ✅ | 2 题 | `HW4_提示.md` | 9 PASS |
+| S5 | `stage5_intervene/` | `train` / `build_rft` / `compare_arms` | ✅ | 2 题 | `HW5_提示.md` | 9 PASS |
+| S6 | `stage6_ablation/` | `measure` / `pareto` | ✅ | 2 题 | `HW6_提示.md` | 4 PASS |
+| S7 | `stage7_memory/` | `build_index` / `evaluate` | ✅ | 2 题 | `HW7_提示.md` | 6 PASS |
+| S8 | `stage8_system/` | `verify` / `run_all` / `cli` | ✅ | 2 题 | `HW8_提示.md` | 6 PASS |
+| S9 | `stage9_report/` | `collect` / `figures` | ✅ | 2 题 | `HW9_提示.md` | 5 PASS |
+
+合计 **77 项检查全过**，与 `outputs/acceptance.md` 一致；README 里出现的 32 条
+`python -m ...` 命令全部能解析到真实模块（含 `build_rft`、`verify --profile`）。
 
 ## B. 数据（S1）
 
