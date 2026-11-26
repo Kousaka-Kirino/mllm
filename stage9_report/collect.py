@@ -37,9 +37,11 @@ def collect_eval() -> dict:
             continue
         rows = read_json(rec)
         grid = run_dir / "grid.json"
+        unsealed = run_dir / "UNSEALED.json"
         out[run_dir.name] = {
             "records": rows,
             "grid": read_json(grid) if grid.exists() else None,
+            "unsealed": read_json(unsealed) if unsealed.exists() else None,
         }
     return out
 
@@ -103,19 +105,32 @@ def collect_train() -> dict:
     return out
 
 
-def _main_accuracy(eval_res: dict) -> tuple[float, int] | None:
-    """主臂（SFT）在 dev_test 上 correct_image 条件的加权平均准确率。"""
-    rows = []
-    for run, v in eval_res.items():
-        if run != "sft_dev":
-            continue
-        for r in v["records"]:
-            if r.get("condition", "correct_image") == "correct_image":
-                rows.append(r)
+def _weighted(eval_res: dict, run: str, cond: str = "correct_image") -> tuple[float, int] | None:
+    """某个 run 在某个条件上的加权平均准确率。"""
+    v = eval_res.get(run)
+    if not v:
+        return None
+    rows = [r for r in v["records"] if r.get("condition", "correct_image") == cond]
     if not rows:
         return None
     n = sum(r["n"] for r in rows)
     return sum(r["accuracy"] * r["n"] for r in rows) / n, n
+
+
+def _main_accuracy(eval_res: dict) -> tuple[float, int] | None:
+    """主臂：优先 locked_test 最终模型，其次 full 重训，最后 pilot 模型。"""
+    for run in ("final_locked", "sft_fulltrain_dev", "sft_dev"):
+        got = _weighted(eval_res, run)
+        if got is not None:
+            return got
+    return None
+
+
+def _main_run(eval_res: dict) -> str:
+    for run in ("final_locked", "sft_fulltrain_dev", "sft_dev"):
+        if eval_res.get(run):
+            return run
+    return "sft_dev"
 
 
 def build_results() -> dict:
@@ -133,7 +148,7 @@ def build_results() -> dict:
     main = _main_accuracy(res["eval"])
     # 派生数字也写进 RESULTS.json，否则报告里会出现"查不到来源"的数
     res["main"] = ({"accuracy": main[0], "n": main[1], "condition": "correct_image",
-                    "split": "dev_test", "run": "sft_dev"} if main else {})
+                    "run": _main_run(res["eval"])} if main else {})
     return res
 
 
@@ -269,12 +284,16 @@ def to_markdown(res: dict) -> str:
     L.append("")
 
     L += ["## 7. 结论（按证据强度排序）", "",
-          "1. **先验主导**：prior_effect 大、VDR 低、换图不影响答案（S4）。",
-          "2. **不是纯先验**：灰图/随机裁块会让准确率崩塌（S4 + S7），说明视觉输入被使用。",
-          "3. **acuity 不是当前瓶颈**：显著块放大没有超过整图（S7）。",
+          "1. **先验效应真实存在，但强度随训练规模大幅衰减**：pilot 模型 prior_effect +0.950，"
+          "full 重训（19,998 条 / 2,500 步）降到 +0.385（见 §12）。",
+          "2. **模型确实读图**：换图（mismatched）让 full 模型掉 0.44 分，pilot 模型则不受影响；"
+          "灰图/随机裁块都会崩（S4 + S7）。",
+          "3. **acuity 不是当前瓶颈**：两个规模下 acuity_effect 的 CI 都跨 0；显著块放大也没超过整图（S7）。",
           "4. **检索未达标**：冻结 SigLIP 平均池化的 recall@1 很低（S7）。",
+          "5. **脆弱性**：同批题只换画风，pilot 模型 97.5% 输出空串、准确率归零（E5，§9）。",
           "",
-          "> 以上四条与 `reports/RESULTS.json` 一一对应；缺项的写 MISSING，不补。", ""]
+          "> 以上五条与 `reports/RESULTS.json` 一一对应；缺项的写 MISSING，不补。",
+          "> §3/§4 的 pilot 数字与小样本有关，读结论时请对照 §12 的规模效应。", ""]
     L += ["## 8. E2 反事实（探索性）", ""]
     inv = res.get("invariance") or {}
     if inv:
@@ -355,6 +374,76 @@ def to_markdown(res: dict) -> str:
     else:
         L.append(f"- {MISSING}（`PICOVLM_DATA=data/full python -m stage4_eval.run "
                  f"--model sft --suite dev_test --run-id sft_full_dev`）")
+    L.append("")
+
+    L += ["## 12. 规模效应：pilot 重训 → full 重训（本轮新增）", ""]
+    ev_now = res.get("eval") or {}
+    pilot, full = ev_now.get("sft_dev"), ev_now.get("sft_fulltrain_dev")
+    if pilot and full and pilot.get("grid") and full.get("grid"):
+        gp, gf = pilot["grid"], full["grid"]
+        L += ["同一套评测代码、同一个 dev_test split（80 条 pilot / 312 族 per cell full）。"
+              "差别只在训练数据量（156 → 19,998 条）与步数（237 → 2,500）。", "",
+              "| 格 | pilot 模型 | full 重训 | Δ |", "|---|---:|---:|---:|"]
+        for c in ("easy_consistent", "easy_conflict", "hard_consistent", "hard_conflict"):
+            a = gp["cells"][c]["acc"]
+            b = gf["cells"][c]["acc"]
+            L.append(f"| {c} | {a:.3f} | {b:.3f} | {b - a:+.3f} |")
+        L += ["",
+              f"- prior_effect：**{gp['prior_effect']:+.3f} → {gf['prior_effect']:+.3f}**",
+              f"- acuity_effect：{gp['acuity_effect']:+.3f} → {gf['acuity_effect']:+.3f}",
+              f"- VDR：easy {gp['vdr_easy']:.3f} → {gf['vdr_easy']:.3f}，"
+              f"hard {gp['vdr_hard']:.3f} → {gf['vdr_hard']:.3f}"]
+        mp = _weighted(ev_now, "sft_dev", "mismatched_image")
+        mf = _weighted(ev_now, "sft_fulltrain_dev", "mismatched_image")
+        if mp and mf:
+            L.append(f"- 换图条件（mismatched_image）：pilot {mp[0]:.3f} → full {mf[0]:.3f}")
+        L += ["",
+              "> **这是本项目最重要的一条负结果修正**：pilot 阶段「冲突格全灭、换图不影响答案」"
+              "的结论，在 128 倍的训练数据下反转——冲突格从 0.00/0.10 升到 0.58/0.56，"
+              "先验效应从 +0.95 降到 +0.39，换图从「无所谓」变成掉 0.44 分。说明「先验压倒视觉」"
+              "至少有相当一部分是**小数据 + 短训练**的产物，而不是架构的固有性质；"
+              "acuity 的结论（不是瓶颈）在两种规模下都成立。"]
+    else:
+        L.append(f"- {MISSING}（需要 `sft_dev` 与 `sft_fulltrain_dev` 两轮评测）")
+    L.append("")
+
+    L += ["## 13. locked_test 最终开封（一次性）", ""]
+    locked = ev_now.get("final_locked")
+    if locked and locked.get("grid"):
+        g = locked["grid"]
+        meta = locked.get("unsealed") or {}
+        L += ["| 格 | n | acc | Wilson 95% |", "|---|---:|---:|---|"]
+        for c, v in g["cells"].items():
+            L.append(f"| {c} | {v['n']} | {v['acc']:.3f} | "
+                     f"[{v['ci'][0]:.3f}, {v['ci'][1]:.3f}] |")
+        b = g.get("bootstrap") or {}
+        pe, ae = b.get("prior_effect") or {}, b.get("acuity_effect") or {}
+        L += ["",
+              f"- prior_effect **{g['prior_effect']:+.3f}**"
+              + (f"（bootstrap [{pe['lo']:+.3f}, {pe['hi']:+.3f}]）" if pe else ""),
+              f"- acuity_effect **{g['acuity_effect']:+.3f}**"
+              + (f"（bootstrap [{ae['lo']:+.3f}, {ae['hi']:+.3f}]）" if ae else ""),
+              f"- interaction {g['interaction']:+.3f}；"
+              f"VDR easy {g['vdr_easy']:.3f} / hard {g['vdr_hard']:.3f}"]
+        mc = g.get("mcnemar_mismatch")
+        if mc:
+            pval = mc["p_value"]
+            p_txt = "<1e-300" if not pval else f"{pval:.3g}"
+            L.append(f"- 换图查验（correct_image vs mismatched_image）：仅正确图对 "
+                     f"{mc.get('correct_image_only', mc.get('a_only'))} / "
+                     f"仅错配图对 {mc.get('mismatched_image_only', mc.get('b_only'))}，"
+                     f"准确率 {mc['acc_a']:.3f} vs {mc['acc_b']:.3f}，"
+                     f"McNemar p = {p_txt}")
+        if meta:
+            L.append(f"- 开封时间 {meta.get('unsealed_at', MISSING)}，"
+                     f"git {str(meta.get('git_head', MISSING))[:8]}，"
+                     f"耗时 {meta.get('elapsed_s', MISSING)}s，"
+                     f"predictions sha256 `{str(meta.get('predictions_sha256', MISSING))[:16]}`")
+        L += ["",
+              "> 只在最终模型定稿后开封一次；`stage4_eval/unseal.py` 会在 `outputs/eval/final_locked/UNSEALED.json`"
+              "留痕，重复开封会被拒绝（除非 `--force`）。"]
+    else:
+        L.append(f"- {MISSING}（`python -m stage4_eval.unseal --model sft --run-id final_locked`）")
     L.append("")
 
     return "\n".join(L)

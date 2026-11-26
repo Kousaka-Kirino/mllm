@@ -34,7 +34,10 @@ def check_prior_eval() -> str:
     if r.returncode != 0:
         raise AssertionError(f"prior 评测失败：\n{r.stdout[-600:]}\n{r.stderr[-600:]}")
     preds = load_run(RUN)
-    require(len(preds) == 320, f"应有 80×4=320 条预测，实际 {len(preds)}")
+    n_dev = len(load_samples("dev_test"))
+    expected = n_dev * 4
+    require(len(preds) == expected,
+            f"应有 {n_dev}×4={expected} 条预测，实际 {len(preds)}")
     conds = {p["condition"] for p in preds}
     require(conds == {"correct_image", "mismatched_image", "prior_only",
                       "image_only"}, f"condition 不全：{conds}")
@@ -58,20 +61,26 @@ def check_two_by_two() -> str:
 
 
 def check_mismatch_test() -> str:
-    """SFT 那一轮的报告里必须有"换图检验"（同实例 McNemar），否则结论没依据。"""
-    p = OUTPUTS / "eval" / "sft_dev" / "grid.json"
-    if not p.exists():
-        raise Skip("没有 sft_dev 的 grid.json（先跑 stage4_eval.run --model sft）")
+    """主结果那一轮的报告里必须有"换图检验"（同实例 McNemar），否则结论没依据。
+
+    优先看 locked_test 最终开封，其次 full 重训，最后才是 pilot 主臂。
+    """
     import json
 
-    grid = json.loads(p.read_text(encoding="utf-8"))
-    cm = grid.get("mcnemar_mismatch")
-    if not cm:
-        raise Skip("该轮只跑了单个 condition，没有换图检验")
-    require(cm["n"] > 0, "换图检验的 n 为 0")
-    require(0.0 <= cm["p_value"] <= 1.0, "p 值越界")
-    return (f"n={cm['n']} correct_only={cm['correct_image_only']} "
-            f"mismatched_only={cm['mismatched_image_only']} p={cm['p_value']:.4g}")
+    for run in ("final_locked", "sft_fulltrain_dev", "sft_dev"):
+        p = OUTPUTS / "eval" / run / "grid.json"
+        if not p.exists():
+            continue
+        grid = json.loads(p.read_text(encoding="utf-8"))
+        cm = grid.get("mcnemar_mismatch")
+        if not cm:
+            continue
+        require(cm["n"] > 0, f"{run} 的换图检验 n 为 0")
+        require(0.0 <= cm["p_value"] <= 1.0, "p 值越界")
+        require(cm["acc_a"] > cm["acc_b"], f"{run}：正确图不该比错配图差")
+        return (f"{run}: n={cm['n']} correct_only={cm['correct_image_only']} "
+                f"mismatched_only={cm['mismatched_image_only']} p={cm['p_value']:.4g}")
+    raise Skip("没有带 mcnemar_mismatch 的 grid.json（先跑 stage4_eval.run 两个条件）")
 
 
 def check_ood() -> str:
@@ -118,17 +127,21 @@ def check_mcnemar() -> str:
     same = mcnemar_vs(preds, preds)
     require(same["a_only"] == 0 and same["b_only"] == 0, "自己比自己应有 0 个不一致")
     require(same["p_value"] == 1.0, f"自己比自己 p 应为 1，实际 {same['p_value']}")
-    # 人工翻转每 3 条的正确性，构造一个"只有 A 对、B 错"的对照
     a = [p for p in preds if p["condition"] == "correct_image"]
-    b = [dict(p, correct_relaxed=(not p["correct_relaxed"]) if i % 3 == 0
-              else p["correct_relaxed"]) for i, p in enumerate(a)]
-    mc = mcnemar_vs(a, b)
-    flipped = sum(1 for p in a if p["correct_relaxed"]) - sum(
-        1 for p in b if p["correct_relaxed"])
-    require(mc["n"] == len(a), "配对样本数不对")
-    require(mc["a_only"] + mc["b_only"] > 0, "构造的差异没有反映到配对表")
-    require(mc["delta"] != 0, "delta 不该为 0")
-    return f"paired={mc['n']} flipped_delta={mc['delta']:+.3f} p={mc['p_value']:.3g}"
+    # 构造两个方向上极端不一致的对照：b=False 全错、b=True 全对。
+    # （不要用"每 3 条翻一次"——在四格均衡的数据上两个方向会互相抵消，delta 恰好为 0。）
+    b_false = [dict(p, correct_relaxed=False) for p in a]
+    b_true = [dict(p, correct_relaxed=True) for p in a]
+    m1 = mcnemar_vs(a, b_false)
+    m2 = mcnemar_vs(a, b_true)
+    require(m1["n"] == len(a) and m2["n"] == len(a), "配对样本数不对")
+    require(m1["a_only"] > 0 and m1["b_only"] == 0,
+            f"全错对照应只有 A 对：a_only={m1['a_only']} b_only={m1['b_only']}")
+    require(m2["b_only"] > 0 and m2["a_only"] == 0,
+            f"全对对照应只有 B 对：a_only={m2['a_only']} b_only={m2['b_only']}")
+    require(m1["delta"] > 0 > m2["delta"], "delta 方向不对")
+    return (f"paired={m1['n']} delta {m1['delta']:+.3f}/{m2['delta']:+.3f} "
+            f"p={m1['p_value']:.3g}/{m2['p_value']:.3g}")
 
 
 def check_report() -> str:

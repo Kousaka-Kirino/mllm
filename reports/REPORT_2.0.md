@@ -1,6 +1,6 @@
 # PicoVLM · 结果汇总（自动生成）
 
-生成时间：20261126T033408Z
+生成时间：20261126T101525Z
 
 > 本文件由 `python -m stage9_report.collect` 生成，不要手改。
 > 每个数字都能在 `reports/RESULTS.json` 与 `outputs/` 里找到来源。
@@ -18,13 +18,19 @@
 
 | run | steps | 首步 loss | 末步 loss | 末步 lr |
 |---|---:|---:|---:|---:|
+| align_20261126T041655Z | 250 | 12.0716 | 0.5747 | 5.68e-09 |
 | sft_20261126T004058Z | 23 | 10.3022 | 0.7279 | 7.37e-07 |
 | sft_20261126T021310Z | 24 | 9.7740 | 0.6299 | 1.01e-08 |
+| sft_20261126T050131Z | 250 | 0.5825 | 0.4686 | 8.84e-10 |
 
 ## 3. 评测（RQ1：2×2 诊断，`correct_image` 条件）
 
 | run | suite | n | accuracy | 95% CI |
 |---|---|---:|---:|---|
+| final_locked | easy_conflict | 1251 | 0.577 | [0.550, 0.604] |
+| final_locked | easy_consistent | 1249 | 0.947 | [0.933, 0.958] |
+| final_locked | hard_conflict | 1250 | 0.584 | [0.556, 0.611] |
+| final_locked | hard_consistent | 1250 | 0.942 | [0.928, 0.954] |
 | first_option-test | easy_conflict | 24 | 0.000 | [0.000, 0.138] |
 | first_option-test | easy_consistent | 24 | 0.750 | [0.551, 0.880] |
 | first_option-test | hard_conflict | 24 | 0.000 | [0.000, 0.138] |
@@ -61,6 +67,10 @@
 | sft_full_dev | easy_consistent | 312 | 0.968 | [0.942, 0.982] |
 | sft_full_dev | hard_conflict | 312 | 0.051 | [0.032, 0.082] |
 | sft_full_dev | hard_consistent | 312 | 0.952 | [0.922, 0.971] |
+| sft_fulltrain_dev | easy_conflict | 312 | 0.580 | [0.525, 0.634] |
+| sft_fulltrain_dev | easy_consistent | 312 | 0.965 | [0.938, 0.980] |
+| sft_fulltrain_dev | hard_conflict | 312 | 0.558 | [0.502, 0.612] |
+| sft_fulltrain_dev | hard_consistent | 312 | 0.939 | [0.907, 0.961] |
 | sft_ood | easy_conflict | 20 | 0.000 | [0.000, 0.161] |
 | sft_ood | easy_consistent | 20 | 0.000 | [0.000, 0.161] |
 | sft_ood | hard_conflict | 20 | 0.000 | [0.000, 0.161] |
@@ -79,6 +89,14 @@
 
 | run | condition | suite | n | accuracy |
 |---|---|---|---:|---:|
+| final_locked | mismatched_image | easy_conflict | 1251 | 0.200 |
+| final_locked | mismatched_image | easy_consistent | 1249 | 0.490 |
+| final_locked | mismatched_image | hard_conflict | 1250 | 0.194 |
+| final_locked | mismatched_image | hard_consistent | 1250 | 0.486 |
+| final_locked | prior_only | easy_conflict | 1251 | 0.042 |
+| final_locked | prior_only | easy_consistent | 1249 | 0.145 |
+| final_locked | prior_only | hard_conflict | 1250 | 0.053 |
+| final_locked | prior_only | hard_consistent | 1250 | 0.147 |
 | prior_dev | image_only | easy_conflict | 20 | 0.000 |
 | prior_dev | image_only | easy_consistent | 20 | 1.000 |
 | prior_dev | image_only | hard_conflict | 20 | 0.000 |
@@ -103,6 +121,14 @@
 | sft_full_dev | prior_only | easy_consistent | 312 | 0.122 |
 | sft_full_dev | prior_only | hard_conflict | 312 | 0.125 |
 | sft_full_dev | prior_only | hard_consistent | 312 | 0.125 |
+| sft_fulltrain_dev | mismatched_image | easy_conflict | 312 | 0.186 |
+| sft_fulltrain_dev | mismatched_image | easy_consistent | 312 | 0.522 |
+| sft_fulltrain_dev | mismatched_image | hard_conflict | 312 | 0.247 |
+| sft_fulltrain_dev | mismatched_image | hard_consistent | 312 | 0.513 |
+| sft_fulltrain_dev | prior_only | easy_conflict | 312 | 0.061 |
+| sft_fulltrain_dev | prior_only | easy_consistent | 312 | 0.163 |
+| sft_fulltrain_dev | prior_only | hard_conflict | 312 | 0.051 |
+| sft_fulltrain_dev | prior_only | hard_consistent | 312 | 0.157 |
 | sft_ood | prior_only | easy_conflict | 20 | 0.150 |
 | sft_ood | prior_only | easy_consistent | 20 | 0.100 |
 | sft_ood | prior_only | hard_conflict | 20 | 0.150 |
@@ -122,6 +148,9 @@
 
 ## 4. 效应（family 聚类 bootstrap）
 
+**final_locked**：prior_effect +0.370，acuity_effect +0.005，interaction +0.012，VDR easy 0.577 / hard 0.584
+- bootstrap（2000 次，按 family）：prior_effect +0.370 [+0.340, +0.400]
+
 **prior-test**：prior_effect +1.000，acuity_effect +0.000，interaction +0.000，VDR MISSING
 
 **sanity-oracle**：prior_effect +0.000，acuity_effect +0.000，interaction +0.000，VDR MISSING
@@ -132,6 +161,9 @@
 **sft_full_dev**：prior_effect +0.939，acuity_effect +0.016，interaction +0.038，VDR easy 0.029 / hard 0.051
 - bootstrap（2000 次，按 family）：prior_effect +0.939 [+0.910, +0.966]
 
+**sft_fulltrain_dev**：prior_effect +0.385，acuity_effect +0.026，interaction +0.003，VDR easy 0.580 / hard 0.558
+- bootstrap（2000 次，按 family）：prior_effect +0.385 [+0.325, +0.444]
+
 **verify-oracle**：prior_effect +0.000，acuity_effect +0.000，interaction +0.000，VDR MISSING
 
 **verify_prior**：prior_effect +1.000，acuity_effect +0.000，interaction +0.000，VDR easy 0.000 / hard 0.000
@@ -141,7 +173,7 @@
 
 | 连接器 | token | 参数(M) | 延迟(ms) | 峰值(MiB) | 精度 |
 |---|---:|---:|---:|---:|---|
-| mlp | 576 | 2.30 | 76 | 1340 | 0.512（correct_image, 80 条） |
+| mlp | 576 | 2.30 | 76 | 1340 | 0.763（correct_image, 5000 条） |
 | resampler | 64 | 20.04 | 40 | 1219 | 未训练（不报） |
 | pixelshuffle | 144 | 2.75 | 41 | 1207 | 未训练（不报） |
 
@@ -153,12 +185,14 @@
 
 ## 7. 结论（按证据强度排序）
 
-1. **先验主导**：prior_effect 大、VDR 低、换图不影响答案（S4）。
-2. **不是纯先验**：灰图/随机裁块会让准确率崩塌（S4 + S7），说明视觉输入被使用。
-3. **acuity 不是当前瓶颈**：显著块放大没有超过整图（S7）。
+1. **先验效应真实存在，但强度随训练规模大幅衰减**：pilot 模型 prior_effect +0.950，full 重训（19,998 条 / 2,500 步）降到 +0.385（见 §12）。
+2. **模型确实读图**：换图（mismatched）让 full 模型掉 0.44 分，pilot 模型则不受影响；灰图/随机裁块都会崩（S4 + S7）。
+3. **acuity 不是当前瓶颈**：两个规模下 acuity_effect 的 CI 都跨 0；显著块放大也没超过整图（S7）。
 4. **检索未达标**：冻结 SigLIP 平均池化的 recall@1 很低（S7）。
+5. **脆弱性**：同批题只换画风，pilot 模型 97.5% 输出空串、准确率归零（E5，§9）。
 
-> 以上四条与 `reports/RESULTS.json` 一一对应；缺项的写 MISSING，不补。
+> 以上五条与 `reports/RESULTS.json` 一一对应；缺项的写 MISSING，不补。
+> §3/§4 的 pilot 数字与小样本有关，读结论时请对照 §12 的规模效应。
 
 ## 8. E2 反事实（探索性）
 
@@ -200,3 +234,38 @@
 - interaction +0.038；VDR easy 0.029 / hard 0.051
 
 > 同一套 pilot 模型、**大 15.6 倍的 held-out 测试集**（每格 312 族）：先验效应更大、acuity 效应的 CI 跨 0。结论与 pilot 一致，但 CI 窄了一个量级。
+
+## 12. 规模效应：pilot 重训 → full 重训（本轮新增）
+
+同一套评测代码、同一个 dev_test split（80 条 pilot / 312 族 per cell full）。差别只在训练数据量（156 → 19,998 条）与步数（237 → 2,500）。
+
+| 格 | pilot 模型 | full 重训 | Δ |
+|---|---:|---:|---:|
+| easy_consistent | 0.950 | 0.965 | +0.015 |
+| easy_conflict | 0.000 | 0.580 | +0.580 |
+| hard_consistent | 1.000 | 0.939 | -0.061 |
+| hard_conflict | 0.100 | 0.558 | +0.458 |
+
+- prior_effect：**+0.950 → +0.385**
+- acuity_effect：-0.050 → +0.026
+- VDR：easy 0.000 → 0.580，hard 0.100 → 0.558
+- 换图条件（mismatched_image）：pilot 0.512 → full 0.367
+
+> **这是本项目最重要的一条负结果修正**：pilot 阶段「冲突格全灭、换图不影响答案」的结论，在 128 倍的训练数据下反转——冲突格从 0.00/0.10 升到 0.58/0.56，先验效应从 +0.95 降到 +0.39，换图从「无所谓」变成掉 0.44 分。说明「先验压倒视觉」至少有相当一部分是**小数据 + 短训练**的产物，而不是架构的固有性质；acuity 的结论（不是瓶颈）在两种规模下都成立。
+
+## 13. locked_test 最终开封（一次性）
+
+| 格 | n | acc | Wilson 95% |
+|---|---:|---:|---|
+| easy_consistent | 1249 | 0.947 | [0.933, 0.958] |
+| easy_conflict | 1251 | 0.577 | [0.550, 0.604] |
+| hard_consistent | 1250 | 0.942 | [0.928, 0.954] |
+| hard_conflict | 1250 | 0.584 | [0.556, 0.611] |
+
+- prior_effect **+0.370**（bootstrap [+0.340, +0.400]）
+- acuity_effect **+0.005**（bootstrap [-0.013, +0.023]）
+- interaction +0.012；VDR easy 0.577 / hard 0.584
+- 换图查验（correct_image vs mismatched_image）：仅正确图对 2401 / 仅错配图对 300，准确率 0.763 vs 0.342，McNemar p = <1e-300
+- 开封时间 2026-11-26T18:12:52+0800，git d4f71a4，耗时 3149.8s，predictions sha256 `bea4c9079628e71d`
+
+> 只在最终模型定稿后开封一次；`stage4_eval/unseal.py` 会在 `outputs/eval/final_locked/UNSEALED.json`留痕，重复开封会被拒绝（除非 `--force`）。

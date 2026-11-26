@@ -10,7 +10,7 @@ import argparse
 from pathlib import Path
 
 from picovlm.config import OUTPUTS, REPORTS
-from picovlm.io_utils import ensure_dir, write_json
+from picovlm.io_utils import ensure_dir, read_json, write_json
 
 from stage3_train.dataset import load_samples
 from stage4_eval.analyse import (bootstrap_effect, cell_accuracy, effects,
@@ -18,9 +18,27 @@ from stage4_eval.analyse import (bootstrap_effect, cell_accuracy, effects,
                                  to_markdown)
 
 
+def _p(p: float) -> str:
+    """p 值下溢到 0 时别打印 "0"，写 "<1e-300" 更诚实。"""
+    return "<1e-300" if not p else f"{p:.4g}"
+
+
+def _suite_of_run(run_id: str) -> str:
+    """优先从开封记录里读 split；没有就按 eval 目录惯例猜 dev_test。"""
+    stamp = OUTPUTS / "eval" / run_id / "UNSEALED.json"
+    if stamp.exists():
+        try:
+            return read_json(stamp).get("suite") or "locked_test"
+        except Exception:
+            return "locked_test"
+    return "dev_test"
+
+
 def build(run_id: str, baseline: str | None = None, suite: str = "dev_test") -> str:
     preds = load_run(run_id)
     samples = {s.id: s for s in load_samples(suite)}
+    if not samples:
+        raise SystemExit(f"[report] {suite} 是空的——检查 PICOVLM_DATA 是否指向对应数据目录")
     cells = cell_accuracy(preds, samples)
     eff = effects(cells)
     boot = bootstrap_effect(preds, samples, n_boot=2000)
@@ -53,7 +71,7 @@ def build(run_id: str, baseline: str | None = None, suite: str = "dev_test") -> 
                f"- 共同样本 n={cm['n']}，仅正确图对 {cm['correct_image_only']}，"
                f"仅错配图对 {cm['mismatched_image_only']}",
                f"- 准确率 {cm['acc_a']:.3f} vs {cm['acc_b']:.3f}，"
-               f"McNemar 精确检验 **p={cm['p_value']:.4g}**",
+               f"McNemar 精确检验 **p={_p(cm['p_value'])}**",
                "",
                "> p 大 → 换掉图答案没变 → 模型不是靠图作答。这条比「冲突格准确率低」"
                "更硬：它不依赖模型是否理解冲突。"]
@@ -79,10 +97,11 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-id", required=True)
     ap.add_argument("--baseline", default="prior_dev")
-    ap.add_argument("--suite", default="dev_test")
+    ap.add_argument("--suite", default=None, help="默认按 UNSEALED.json 推断，否则 dev_test")
     args = ap.parse_args(argv)
     base = args.baseline if (OUTPUTS / "eval" / args.baseline).exists() else None
-    path = build(args.run_id, base, args.suite)
+    suite = args.suite or _suite_of_run(args.run_id)
+    path = build(args.run_id, base, suite)
     print(f"report {path}")
     return 0
 

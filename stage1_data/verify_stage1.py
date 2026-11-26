@@ -37,6 +37,7 @@ def main(argv: list[str] | None = None) -> int:
 
     data, card = _load()
     th = card["acuity_thresholds"]
+    cfg_profiles = (load_config("data.yaml") or {}).get("profiles", {})
 
     def render_deterministic() -> str:
         """同一 spec + 同一数值表，两次渲染必须逐字节相同。"""
@@ -70,15 +71,18 @@ def main(argv: list[str] | None = None) -> int:
         return f"字号 {xs[0]}→{xs[-1]} 对应中位像素 {med[0]:.1f}→{med[-1]:.1f}"
 
     def config_matches() -> str:
-        cfg = load_config("data.yaml")
-        prof = cfg["profiles"][args.profile]
+        # 以数据自己的 datacard 为准（--data-dir 可能是 full），不要用 CLI 的默认 profile
+        prof_key = card.get("profile") or args.profile
+        if prof_key not in cfg_profiles:
+            return f"datacard 的 profile={prof_key} 不在 data.yaml 里，跳过条数比对"
+        prof = cfg_profiles[prof_key]
         got = card["counts"]
         for key, n in (("train", prof["n_train"]), ("val", prof["n_val"]),
                        ("dev_test", prof["n_dev_test"]), ("locked_test", prof["n_locked_test"])):
             # 生成器按"每种题型取整"分配，允许最多 6 条误差
             require(abs(got.get(key, 0) - int(n)) <= 6,
-                    f"{key} 实际 {got.get(key)} 与配置 {n} 差太多")
-        return f"四个 split 的条数与 {args.profile} 配置相符（±6）"
+                    f"{key} 实际 {got.get(key)} 与 {prof_key} 配置 {n} 差太多")
+        return f"四个 split 的条数与 {prof_key} 配置相符（±6）"
 
     checks = [
         ("splits-present", lambda: V.check_files(ROOT, DATA)),

@@ -42,7 +42,11 @@ CELL_LABEL = {
 
 
 def _latest_grid() -> dict | None:
-    """优先取 SFT 那一轮（主结果），没有就取最新的一轮。"""
+    """主结果优先级：locked_test 最终开封 → full 重训 → pilot 主臂 → 最新一轮。"""
+    for name in ("final_locked", "sft_fulltrain_dev", "sft_dev"):
+        p = OUTPUTS / "eval" / name / "grid.json"
+        if p.exists():
+            return io.read_json(p)
     cands = sorted((OUTPUTS / "eval").glob("*/grid.json"))
     if not cands:
         return None
@@ -73,7 +77,7 @@ def fig_2x2(grid: dict, out: Path) -> Path:
             ax.errorbar(j, i + 0.16, yerr=err[i, j, :].reshape(2, 1), fmt="none",
                         ecolor="black", elinewidth=1.2, capsize=5)
     ax.set_title(
-        f"2×2 accuracy — {grid.get('model_id', '')}\n"
+        f"2×2 accuracy — {grid.get('run_id', grid.get('model_id', ''))}\n"
         f"prior effect {grid['prior_effect']:+.3f}, "
         f"acuity effect {grid['acuity_effect']:+.3f}",
         fontsize=10)

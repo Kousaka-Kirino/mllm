@@ -23,11 +23,15 @@
 | 16 | 训练种子方差远小于效应（排除"碰巧"） | seed 17 vs 23：Δ +0.013，1 对 0 翻转，McNemar p = 1.0 | `reports/compare_sft_dev_vs_sft_dev_seed23.md` |
 | 17 | 大测试集复现（15.6×，每格 312 族） | 0.968 / 0.029 / 0.952 / 0.051；prior_effect +0.939 [0.910,0.966]；acuity_effect +0.016 [−0.014,0.048] | `outputs/eval/sft_full_dev/grid.json`、`reports/eval_sft_full_dev.md` |
 | 18 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
+| 19 | **full 规模重训推翻 pilot 结论**（最重要的负结果修正） | 数据 156→19,998 条、步数 237→2,500：冲突格 0.000/0.100 → **0.580/0.558**；prior_effect +0.950 → **+0.385** [+0.325,+0.444]；acuity_effect 仍 +0.026 [−0.008,+0.060] | `outputs/eval/sft_fulltrain_dev/grid.json`、`reports/eval_sft_fulltrain_dev.md` |
+| 20 | full 模型确实在用视觉证据（pilot 则不是） | correct 0.760 vs mismatched 0.367，577 对 vs 86 对，McNemar **p = 3.5e-90**（pilot 同一探针 p = 1.0） | `outputs/eval/sft_fulltrain_dev/predictions.jsonl` |
+| 21 | locked_test 一次性开封，防"边调边看" | 5,000 条 × 3 条件，留痕 unsealed_at / git head / predictions sha256 | `outputs/eval/final_locked/UNSEALED.json` |
 
 ## 三条写简历的规矩
 
 1. **只写可复现的数**：每个数都能用仓库里的命令重跑出来（数据由种子重建）。
-2. **负结果照写**：第 11、12、13、15 条比"我们超过了 baseline"更能说明你会做实验。
+2. **负结果照写**：第 11、12、13、15、19 条比"我们超过了 baseline"更能说明你会做实验；
+   第 19 条尤其值钱——它说明你的实验能分辨"模型不行"和"训练不够"，而不是把样本量不足的结论当成架构性质。
 3. **区分"我做的"和"借用的"**：SigLIP/Qwen 是预训练权重，你训的是连接器 + LoRA；
    写"可训练参数 3.38M"而不是"我训了 0.5B"（3.38M = LoRA 1.08M + connector 2.30M，
    SFT 阶段实际更新的参数量；总参 589.5M 里 586M 是冻结的）。

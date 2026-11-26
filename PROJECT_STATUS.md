@@ -63,7 +63,7 @@
 | connector 对齐（只训 2.30M） | ✅ | 60 步，loss 6.37→0.61，45s，`outputs/ckpt/align/` |
 | LoRA SFT（r=8，1.08M） | ✅ | 237 步，loss→0.45，~4min，`outputs/ckpt/sft_pilot/` |
 | EOS 监督（答完会停） | ✅ | `dataset.answer_with_eos`；修前格式分恒 0 |
-| full 规模训练 | 🟡 | 已用 pilot 模型在 full 的 dev_test（312/格）复现 RQ1；**尚未**在 full 上重训对齐 + SFT |
+| full 规模训练 | ✅ | 对齐 1,250 步（2,657s，peak 5849MiB）→ `outputs/ckpt/align_full/`；SFT 2,500 步 / 2 epoch（14,713s wall，peak 3770MiB）→ `outputs/ckpt/sft_full/`；dev_test（312/格）评测：0.965/0.580/0.939/0.558，prior_effect **+0.385** [+0.325,+0.444] |
 
 ## E. 评测（S4）
 
@@ -72,7 +72,7 @@
 | 四条件（correct / mismatched / prior_only / image_only） | ✅ | `stage4_eval/predictor.py` |
 | 2×2 四格 + prior/acuity 效应 + VDR | ✅ | `outputs/eval/sft_dev/grid.json` |
 | Wilson CI / family 聚类 bootstrap / McNemar | ✅ | `analyse.py`、`reports/eval_*.md` |
-| locked_test | 🟡 | 生成好了（160 族），只在最后评测，尚未"开封" |
+| locked_test | ✅ | **已一次性开封**（5,000 条 × 3 条件，耗时 3,150s，留痕 `outputs/eval/final_locked/UNSEALED.json`）：0.947 / 0.577 / 0.942 / 0.584，prior_effect +0.370 [+0.340,+0.400]，acuity_effect +0.005（跨 0），换图 p<1e-300 |
 | OOD 风格集 | ✅ | `stage1_data/ood.py` + `stage4_eval/ood.py`：同批 80 题换画风，0.512 → **0.000**，97.5% 空串（p=9.1e-13） |
 
 ## F. 干预（S5）
@@ -109,11 +109,13 @@
 ## 下一步（按优先级）
 
 1. **full 数据** ✅ 已构建并验收（每格 312 / 1250 族）；
-2. **full 规模训练**（对齐 + SFT 各数小时）→ 目前只有 pilot 模型在 full 测试集上的复现；
-3. **干预对照跑满**（课程 / 反事实 / RFT / GRPO 各同算力）→ RQ2 的配对表；
-4. **locked_test 开封一次** → 最终数字；
+2. **full 规模训练** ✅ 对齐 1,250 步 + SFT 2,500 步（约 4 小时），dev_test 与 locked_test 双重复核；
+3. **locked_test 开封** ✅ 2026-11-26 一次性开封，留痕在 `outputs/eval/final_locked/UNSEALED.json`；
+4. **干预对照跑满**（课程 / 反事实 / RFT / GRPO 各同算力）→ RQ2 的配对表 —— **未做**，
+   目前只有 GRPO 的 G=2–4 探针（5/6 组优势恒 0 的负结果）；
 5. （可选）训练种子方差 ✅ 已完成：seed 17 vs 23 → Δ +0.013、p = 1.0
    （[compare_sft_dev_vs_sft_dev_seed23.md](reports/compare_sft_dev_vs_sft_dev_seed23.md)）。
 
-> 第 1–4 步是"把 pilot 结论升级成主结论"的唯一路径；
-> 不做也可以交付（诚实的 pilot 结论 + 完整骨架），但简历上要写清"pilot 规模"。
+> 1–3 已完成，"pilot 结论 → full 结论"的升级路径走完了；
+> 剩下唯一没跑满的是第 4 条（RQ2 的三臂同算力对照），简历里应写成"设计了矩阵并跑了 GRPO 探针"，
+> 而不是"三种干预都验证过"。

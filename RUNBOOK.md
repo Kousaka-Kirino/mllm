@@ -110,6 +110,15 @@ python -m stage4_eval.unseal --model sft \
 
 它会在 `outputs/eval/final_locked/UNSEALED.json` 记下时间、git commit、预测文件 sha256。
 
+**实测记录（2026-11-26，full 模型）**：5,000 条 × 3 条件 = 15,000 条预测，耗时 **3,150s**，
+四格 0.947 / 0.577 / 0.942 / 0.584，prior_effect **+0.370** [+0.340, +0.400]，
+acuity_effect **+0.005**（跨 0），换图 **p < 1e-300**。
+之后用 `python -m stage4_eval.report --run-id final_locked` 生成 `grid.json`（会自动按
+`UNSEALED.json` 推断 split，不用手写 `--suite`）。
+
+> 注意：`stage4_eval.report` 默认读 `dev_test`；跑 locked_test 的那一轮必须先有
+> `UNSEALED.json`，否则样本对不上、四格会是 0（这是 2026-11-26 踩过的坑，已修）。
+
 ---
 
 ## S5 干预（实测：GRPO 2–6 步探针，3 分钟以内）

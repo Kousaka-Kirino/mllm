@@ -1,5 +1,5 @@
 {
-  "stamp": "20261126T033408Z",
+  "stamp": "20261126T101525Z",
   "data": {
     "profile": "pilot",
     "seed": 17,
@@ -88,6 +88,25 @@
     "images": 636
   },
   "train": {
+    "align_20261126T041655Z": {
+      "steps": 250,
+      "first": {
+        "step": 5,
+        "epoch": 0,
+        "loss": 12.07155737876892,
+        "lr": 8.383845245570336e-05,
+        "elapsed_s": 10.6,
+        "peak_mib": 5823
+      },
+      "last": {
+        "step": 1249,
+        "epoch": 0,
+        "loss": 0.5746627040207386,
+        "lr": 5.681006637400763e-09,
+        "elapsed_s": 2657.0,
+        "peak_mib": 5849
+      }
+    },
     "sft_20261126T004058Z": {
       "steps": 23,
       "first": {
@@ -125,9 +144,455 @@
         "elapsed_s": 224.7,
         "peak_mib": 3770
       }
+    },
+    "sft_20261126T050131Z": {
+      "steps": 250,
+      "first": {
+        "step": 10,
+        "epoch": 0,
+        "loss": 0.5824588457355275,
+        "lr": 1.6535692534445375e-05,
+        "elapsed_s": 28.8,
+        "peak_mib": 3769
+      },
+      "last": {
+        "step": 2498,
+        "epoch": 1,
+        "loss": 0.4686223504759255,
+        "lr": 8.840503671944179e-10,
+        "elapsed_s": 14713.5,
+        "peak_mib": 3770
+      }
     }
   },
   "eval": {
+    "final_locked": {
+      "records": [
+        {
+          "run_id": "final_locked",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 1251,
+          "accuracy": 0.5771382893685052,
+          "ci_low": 0.5495677798617973,
+          "ci_high": 0.6042365104278957,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 120.9167865707434,
+          "by_qtype": {
+            "compare": 0.4012738853503185,
+            "maxcat": 0.6357827476038339,
+            "count": 0.7596153846153846,
+            "order": 0.5128205128205128
+          },
+          "by_prior": {
+            "marginal": 0.4012738853503185,
+            "position": 0.6357827476038339,
+            "numeric": 0.7596153846153846,
+            "order": 0.5128205128205128
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 1251,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 1249,
+          "accuracy": 0.9471577261809447,
+          "ci_low": 0.9333229889398631,
+          "ci_high": 0.9582503159948552,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 121.01817453963167,
+          "by_qtype": {
+            "maxcat": 0.9840255591054313,
+            "compare": 0.9102564102564102,
+            "count": 0.9743589743589743,
+            "order": 0.9198717948717948
+          },
+          "by_prior": {
+            "position": 0.9840255591054313,
+            "marginal": 0.9102564102564102,
+            "numeric": 0.9743589743589743,
+            "order": 0.9198717948717948
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 1249,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 1250,
+          "accuracy": 0.584,
+          "ci_low": 0.5564592009979756,
+          "ci_high": 0.6110260887271832,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 136.31807999999964,
+          "by_qtype": {
+            "count": 0.7348242811501597,
+            "order": 0.6166134185303515,
+            "maxcat": 0.6089743589743589,
+            "compare": 0.375
+          },
+          "by_prior": {
+            "numeric": 0.7348242811501597,
+            "order": 0.6166134185303515,
+            "position": 0.6089743589743589,
+            "marginal": 0.375
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 1250,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 1250,
+          "accuracy": 0.9424,
+          "ci_low": 0.9280775449206884,
+          "ci_high": 0.9540116476318157,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 132.4728,
+          "by_qtype": {
+            "count": 0.9744408945686901,
+            "order": 0.8977635782747604,
+            "maxcat": 0.9871794871794872,
+            "compare": 0.9102564102564102
+          },
+          "by_prior": {
+            "numeric": 0.9744408945686901,
+            "order": 0.8977635782747604,
+            "position": 0.9871794871794872,
+            "marginal": 0.9102564102564102
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 1250,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 1251,
+          "accuracy": 0.19984012789768185,
+          "ci_low": 0.17861493144057278,
+          "ci_high": 0.22290308924564733,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 121.00583533173456,
+          "by_qtype": {
+            "compare": 0.20382165605095542,
+            "maxcat": 0.11501597444089456,
+            "count": 0.16346153846153846,
+            "order": 0.3173076923076923
+          },
+          "by_prior": {
+            "marginal": 0.20382165605095542,
+            "position": 0.11501597444089456,
+            "numeric": 0.16346153846153846,
+            "order": 0.3173076923076923
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 1251,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 1249,
+          "accuracy": 0.4899919935948759,
+          "ci_low": 0.4623415836704468,
+          "ci_high": 0.5177037765593042,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 121.00184147317856,
+          "by_qtype": {
+            "maxcat": 0.2364217252396166,
+            "compare": 0.7403846153846154,
+            "count": 0.3173076923076923,
+            "order": 0.6666666666666666
+          },
+          "by_prior": {
+            "position": 0.2364217252396166,
+            "marginal": 0.7403846153846154,
+            "numeric": 0.3173076923076923,
+            "order": 0.6666666666666666
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 1249,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 1250,
+          "accuracy": 0.1944,
+          "ci_low": 0.17341171632579383,
+          "ci_high": 0.21726084867410378,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 136.77896000000013,
+          "by_qtype": {
+            "count": 0.14057507987220447,
+            "order": 0.26198083067092653,
+            "maxcat": 0.15705128205128205,
+            "compare": 0.21794871794871795
+          },
+          "by_prior": {
+            "numeric": 0.14057507987220447,
+            "order": 0.26198083067092653,
+            "position": 0.15705128205128205,
+            "marginal": 0.21794871794871795
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 1250,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 1250,
+          "accuracy": 0.4856,
+          "ci_low": 0.4579799795795302,
+          "ci_high": 0.5133082564675853,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 132.52991999999998,
+          "by_qtype": {
+            "count": 0.28753993610223644,
+            "order": 0.7252396166134185,
+            "maxcat": 0.22435897435897437,
+            "compare": 0.7051282051282052
+          },
+          "by_prior": {
+            "numeric": 0.28753993610223644,
+            "order": 0.7252396166134185,
+            "position": 0.22435897435897437,
+            "marginal": 0.7051282051282052
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 1250,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 1251,
+          "accuracy": 0.04156674660271783,
+          "ci_low": 0.03183781556050706,
+          "ci_high": 0.054102490334425685,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 369.5519584332538,
+          "by_qtype": {
+            "compare": 0.0,
+            "maxcat": 0.0,
+            "count": 0.16666666666666666,
+            "order": 0.0
+          },
+          "by_prior": {
+            "marginal": 0.0,
+            "position": 0.0,
+            "numeric": 0.16666666666666666,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 1251,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 1249,
+          "accuracy": 0.14491593274619696,
+          "ci_low": 0.12648203337923822,
+          "ci_high": 0.16552734757233292,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 372.9826261008809,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.5801282051282052
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.5801282051282052
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 1249,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 1250,
+          "accuracy": 0.0528,
+          "ci_low": 0.04171611287539286,
+          "ci_high": 0.06662410658780815,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 376.4912799999999,
+          "by_qtype": {
+            "count": 0.2108626198083067,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.2108626198083067,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 1250,
+          "extra": {}
+        },
+        {
+          "run_id": "final_locked",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 1250,
+          "accuracy": 0.1472,
+          "ci_low": 0.1286399219685404,
+          "ci_high": 0.16792186118579167,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 372.6252799999993,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.5878594249201278,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.5878594249201278,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 1250,
+          "extra": {}
+        }
+      ],
+      "grid": {
+        "run_id": "final_locked",
+        "model_id": "pico:sft",
+        "cells": {
+          "easy_consistent": {
+            "n": 1249,
+            "k": 1183,
+            "acc": 0.9471577261809447,
+            "ci": [
+              0.9333229889398631,
+              0.9582503159948552
+            ],
+            "families": 1249
+          },
+          "easy_conflict": {
+            "n": 1251,
+            "k": 722,
+            "acc": 0.5771382893685052,
+            "ci": [
+              0.5495677798617973,
+              0.6042365104278957
+            ],
+            "families": 1251
+          },
+          "hard_consistent": {
+            "n": 1250,
+            "k": 1178,
+            "acc": 0.9424,
+            "ci": [
+              0.9280775449206884,
+              0.9540116476318157
+            ],
+            "families": 1250
+          },
+          "hard_conflict": {
+            "n": 1250,
+            "k": 730,
+            "acc": 0.584,
+            "ci": [
+              0.5564592009979756,
+              0.6110260887271832
+            ],
+            "families": 1250
+          }
+        },
+        "n": 5000,
+        "prior_effect": 0.37001943681243954,
+        "acuity_effect": 0.004757726180944721,
+        "interaction": 0.011619436812439488,
+        "vdr_easy": 0.5771382893685052,
+        "vdr_hard": 0.584,
+        "bootstrap": {
+          "n_boot": 2000,
+          "prior_effect": {
+            "point": 0.37001943681243954,
+            "lo": 0.33953113170022076,
+            "hi": 0.3997558883851263
+          },
+          "acuity_effect": {
+            "point": 0.004757726180944721,
+            "lo": -0.012669789917204355,
+            "hi": 0.02305280108483765
+          }
+        },
+        "mcnemar_mismatch": {
+          "cond_a": "correct_image",
+          "cond_b": "mismatched_image",
+          "n": 5000,
+          "correct_image_only": 2401,
+          "mismatched_image_only": 300,
+          "acc_a": 0.7626,
+          "acc_b": 0.3424,
+          "p_value": 0.0
+        }
+      },
+      "unsealed": {
+        "unsealed_at": "2026-11-26T18:12:52+0800",
+        "reason": "final report: full-scale SFT (19,998 train, 2 epochs)",
+        "git_head": "d4f71a4",
+        "argv": [
+          "--model",
+          "sft",
+          "--connector",
+          "outputs/ckpt/sft_full/connector.pt",
+          "--adapter",
+          "outputs/ckpt/sft_full/lora",
+          "--conditions",
+          "correct_image,mismatched_image,prior_only",
+          "--run-id",
+          "final_locked",
+          "--reason",
+          "final report: full-scale SFT (19,998 train, 2 epochs)"
+        ],
+        "run_id": "final_locked",
+        "suite": "locked_test",
+        "conditions": "correct_image,mismatched_image,prior_only",
+        "predictions_sha256": "bea4c9079628e71d9e99e979458e1af20b64f633b6594d4ab6fd6f16ffbbaae3",
+        "elapsed_s": 3149.8
+      }
+    },
     "first_option-test": {
       "records": [
         {
@@ -396,7 +861,8 @@
           }
         }
       ],
-      "grid": null
+      "grid": null,
+      "unsealed": null
     },
     "oracle-test": {
       "records": [
@@ -666,7 +1132,8 @@
           }
         }
       ],
-      "grid": null
+      "grid": null,
+      "unsealed": null
     },
     "prior-test": {
       "records": [
@@ -980,7 +1447,8 @@
         "interaction": 0.0,
         "vdr": {},
         "n": 120
-      }
+      },
+      "unsealed": null
     },
     "prior_dev": {
       "records": [
@@ -1417,7 +1885,8 @@
           "extra": {}
         }
       ],
-      "grid": null
+      "grid": null,
+      "unsealed": null
     },
     "sanity-oracle": {
       "records": [
@@ -1731,7 +2200,8 @@
         "interaction": 0.0,
         "vdr": {},
         "n": 120
-      }
+      },
+      "unsealed": null
     },
     "sft_dev": {
       "records": [
@@ -2134,7 +2604,8 @@
           "acc_b": 0.5125,
           "p_value": 1.0
         }
-      }
+      },
+      "unsealed": null
     },
     "sft_dev_seed23": {
       "records": [
@@ -2247,7 +2718,8 @@
           "extra": {}
         }
       ],
-      "grid": null
+      "grid": null,
+      "unsealed": null
     },
     "sft_full_dev": {
       "records": [
@@ -2532,7 +3004,412 @@
             "hi": 0.04756697648988528
           }
         }
-      }
+      },
+      "unsealed": null
+    },
+    "sft_fulltrain_dev": {
+      "records": [
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.5801282051282052,
+          "ci_low": 0.5247154724997035,
+          "ci_high": 0.6335918003538753,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 119.16826923076935,
+          "by_qtype": {
+            "maxcat": 0.5512820512820513,
+            "compare": 0.41025641025641024,
+            "count": 0.8205128205128205,
+            "order": 0.5384615384615384
+          },
+          "by_prior": {
+            "position": 0.5512820512820513,
+            "marginal": 0.41025641025641024,
+            "numeric": 0.8205128205128205,
+            "order": 0.5384615384615384
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.9647435897435898,
+          "ci_low": 0.9379808412007449,
+          "ci_high": 0.9802013413500124,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 121.20320512820516,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 0.9102564102564102,
+            "count": 0.9871794871794872,
+            "order": 0.9615384615384616
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 0.9102564102564102,
+            "numeric": 0.9871794871794872,
+            "order": 0.9615384615384616
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.5576923076923077,
+          "ci_low": 0.5022122955804417,
+          "ci_high": 0.611768940874135,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 119.6211538461538,
+          "by_qtype": {
+            "count": 0.7307692307692307,
+            "order": 0.47435897435897434,
+            "maxcat": 0.5769230769230769,
+            "compare": 0.44871794871794873
+          },
+          "by_prior": {
+            "numeric": 0.7307692307692307,
+            "order": 0.47435897435897434,
+            "position": 0.5769230769230769,
+            "marginal": 0.44871794871794873
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.9391025641025641,
+          "ci_low": 0.9068530151080635,
+          "ci_high": 0.9606708401295484,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 119.20929487179495,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 0.8717948717948718,
+            "maxcat": 1.0,
+            "compare": 0.8846153846153846
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 0.8717948717948718,
+            "position": 1.0,
+            "marginal": 0.8846153846153846
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.1858974358974359,
+          "ci_low": 0.1466447819719903,
+          "ci_high": 0.23279070844198083,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 117.74038461538457,
+          "by_qtype": {
+            "maxcat": 0.07692307692307693,
+            "compare": 0.20512820512820512,
+            "count": 0.07692307692307693,
+            "order": 0.38461538461538464
+          },
+          "by_prior": {
+            "position": 0.07692307692307693,
+            "marginal": 0.20512820512820512,
+            "numeric": 0.07692307692307693,
+            "order": 0.38461538461538464
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.5224358974358975,
+          "ci_low": 0.467075755416399,
+          "ci_high": 0.5772502809826031,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 119.38493589743591,
+          "by_qtype": {
+            "maxcat": 0.24358974358974358,
+            "compare": 0.8461538461538461,
+            "count": 0.2948717948717949,
+            "order": 0.7051282051282052
+          },
+          "by_prior": {
+            "position": 0.24358974358974358,
+            "marginal": 0.8461538461538461,
+            "numeric": 0.2948717948717949,
+            "order": 0.7051282051282052
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.2467948717948718,
+          "ci_low": 0.20222622867867523,
+          "ci_high": 0.2975227891040158,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 120.49102564102562,
+          "by_qtype": {
+            "count": 0.1794871794871795,
+            "order": 0.34615384615384615,
+            "maxcat": 0.15384615384615385,
+            "compare": 0.3076923076923077
+          },
+          "by_prior": {
+            "numeric": 0.1794871794871795,
+            "order": 0.34615384615384615,
+            "position": 0.15384615384615385,
+            "marginal": 0.3076923076923077
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.5128205128205128,
+          "ci_low": 0.4575403625811491,
+          "ci_high": 0.5677888010754233,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 118.86474358974358,
+          "by_qtype": {
+            "count": 0.2948717948717949,
+            "order": 0.7435897435897436,
+            "maxcat": 0.23076923076923078,
+            "compare": 0.782051282051282
+          },
+          "by_prior": {
+            "numeric": 0.2948717948717949,
+            "order": 0.7435897435897436,
+            "position": 0.23076923076923078,
+            "marginal": 0.782051282051282
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.060897435897435896,
+          "ci_low": 0.03932915987045156,
+          "ci_high": 0.09314698489193658,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 361.48814102564086,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.24358974358974358,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.24358974358974358,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.16346153846153846,
+          "ci_low": 0.1265682272197472,
+          "ci_high": 0.2085412267952218,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 361.66794871794895,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.6538461538461539
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.6538461538461539
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.05128205128205128,
+          "ci_low": 0.03180926586813644,
+          "ci_high": 0.08167000615182224,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 365.80961538461537,
+          "by_qtype": {
+            "count": 0.20512820512820512,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.20512820512820512,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_fulltrain_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.15705128205128205,
+          "ci_low": 0.12087939526386499,
+          "ci_high": 0.20156547692281773,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 358.0426282051282,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.6282051282051282,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.6282051282051282,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        }
+      ],
+      "grid": {
+        "run_id": "sft_fulltrain_dev",
+        "model_id": "pico:sft",
+        "cells": {
+          "easy_consistent": {
+            "n": 312,
+            "k": 301,
+            "acc": 0.9647435897435898,
+            "ci": [
+              0.9379808412007449,
+              0.9802013413500124
+            ],
+            "families": 312
+          },
+          "easy_conflict": {
+            "n": 312,
+            "k": 181,
+            "acc": 0.5801282051282052,
+            "ci": [
+              0.5247154724997035,
+              0.6335918003538753
+            ],
+            "families": 312
+          },
+          "hard_consistent": {
+            "n": 312,
+            "k": 293,
+            "acc": 0.9391025641025641,
+            "ci": [
+              0.9068530151080635,
+              0.9606708401295484
+            ],
+            "families": 312
+          },
+          "hard_conflict": {
+            "n": 312,
+            "k": 174,
+            "acc": 0.5576923076923077,
+            "ci": [
+              0.5022122955804417,
+              0.611768940874135
+            ],
+            "families": 312
+          }
+        },
+        "n": 1248,
+        "prior_effect": 0.3846153846153846,
+        "acuity_effect": 0.02564102564102566,
+        "interaction": 0.0032051282051281937,
+        "vdr_easy": 0.5801282051282052,
+        "vdr_hard": 0.5576923076923077,
+        "bootstrap": {
+          "n_boot": 2000,
+          "prior_effect": {
+            "point": 0.3846153846153846,
+            "lo": 0.32543202981515884,
+            "hi": 0.4438144936634363
+          },
+          "acuity_effect": {
+            "point": 0.02564102564102566,
+            "lo": -0.008186209549865375,
+            "hi": 0.060317460317460325
+          }
+        },
+        "mcnemar_mismatch": {
+          "cond_a": "correct_image",
+          "cond_b": "mismatched_image",
+          "n": 1248,
+          "correct_image_only": 577,
+          "mismatched_image_only": 86,
+          "acc_a": 0.7604166666666666,
+          "acc_b": 0.36698717948717946,
+          "p_value": 3.5439601394158867e-90
+        }
+      },
+      "unsealed": null
     },
     "sft_ood": {
       "records": [
@@ -2753,7 +3630,8 @@
           "extra": {}
         }
       ],
-      "grid": null
+      "grid": null,
+      "unsealed": null
     },
     "verify-oracle": {
       "records": [
@@ -3067,7 +3945,8 @@
         "interaction": 0.0,
         "vdr": {},
         "n": 120
-      }
+      },
+      "unsealed": null
     },
     "verify_prior": {
       "records": [
@@ -3578,7 +4457,8 @@
           "acc_b": 0.5,
           "p_value": 1.0
         }
-      }
+      },
+      "unsealed": null
     }
   },
   "bench": {
@@ -3882,10 +4762,9 @@
     }
   },
   "main": {
-    "accuracy": 0.5125,
-    "n": 80,
+    "accuracy": 0.7626,
+    "n": 5000,
     "condition": "correct_image",
-    "split": "dev_test",
-    "run": "sft_dev"
+    "run": "final_locked"
   }
 }
