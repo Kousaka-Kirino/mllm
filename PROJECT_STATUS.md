@@ -26,7 +26,7 @@
 | 四类可操纵先验 + 冲突对 | ✅ | `stage1_data/conflict.py`（position / marginal / numeric / order） |
 | family 划分（成对样本同 split） | ✅ | `build.py` 的断言 + `validate.py` 的 `no-family-leak` |
 | pilot 数据 | ✅ | 636 family / 636 图 / 30MB，ρ 实测 0.7406 |
-| full 数据（≥200 family/格） | ⬜ | 仅代码就绪：`--profile full`；未跑（约 25–35 分钟 / 1.5GB） |
+| full 数据（≥200 family/格） | ✅ | 已构建并验收：train 19998 / val 2496 / dev_test 1248（312/格）/ locked_test 5000（1250/格），28,742 图 / 约 700MB；`validate --profile full --data-dir data/full` 全 PASS |
 | 人工核验记录 | 🟡 | 12 个裁剪图 + 表格（`reports/acuity_spotcheck/README.md`），样本量小 |
 
 ## C. 模型（S2）
@@ -45,7 +45,7 @@
 | connector 对齐（只训 2.30M） | ✅ | 60 步，loss 6.37→0.61，45s，`outputs/ckpt/align/` |
 | LoRA SFT（r=8，1.08M） | ✅ | 237 步，loss→0.45，~4min，`outputs/ckpt/sft_pilot/` |
 | EOS 监督（答完会停） | ✅ | `dataset.answer_with_eos`；修前格式分恒 0 |
-| full 规模训练 | ⬜ | 需要先有 full 数据 |
+| full 规模训练 | 🟡 | 已用 pilot 模型在 full 的 dev_test（312/格）复现 RQ1；**尚未**在 full 上重训对齐 + SFT |
 
 ## E. 评测（S4）
 
@@ -90,8 +90,8 @@
 
 ## 下一步（按优先级）
 
-1. **full 数据**（25–35 分钟）→ 每格 ≥200 family，正式主分析；
-2. **full 规模训练**（对齐 + SFT 各数小时）→ 得到有解释力的主结果；
+1. **full 数据** ✅ 已构建并验收（每格 312 / 1250 族）；
+2. **full 规模训练**（对齐 + SFT 各数小时）→ 目前只有 pilot 模型在 full 测试集上的复现；
 3. **干预对照跑满**（课程 / 反事实 / RFT / GRPO 各同算力）→ RQ2 的配对表；
 4. **locked_test 开封一次** → 最终数字；
 5. （可选）训练种子方差 ✅ 已完成：seed 17 vs 23 → Δ +0.013、p = 1.0

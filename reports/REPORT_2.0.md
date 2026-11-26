@@ -1,6 +1,6 @@
 # PicoVLM · 结果汇总（自动生成）
 
-生成时间：20261126T023942Z
+生成时间：20261126T030927Z
 
 > 本文件由 `python -m stage9_report.collect` 生成，不要手改。
 > 每个数字都能在 `reports/RESULTS.json` 与 `outputs/` 里找到来源。
@@ -57,6 +57,10 @@
 | sft_dev_seed23 | easy_consistent | 20 | 0.950 | [0.764, 0.991] |
 | sft_dev_seed23 | hard_conflict | 20 | 0.050 | [0.009, 0.236] |
 | sft_dev_seed23 | hard_consistent | 20 | 1.000 | [0.839, 1.000] |
+| sft_full_dev | easy_conflict | 312 | 0.029 | [0.015, 0.054] |
+| sft_full_dev | easy_consistent | 312 | 0.968 | [0.942, 0.982] |
+| sft_full_dev | hard_conflict | 312 | 0.051 | [0.032, 0.082] |
+| sft_full_dev | hard_consistent | 312 | 0.952 | [0.922, 0.971] |
 | sft_ood | easy_conflict | 20 | 0.000 | [0.000, 0.161] |
 | sft_ood | easy_consistent | 20 | 0.000 | [0.000, 0.161] |
 | sft_ood | hard_conflict | 20 | 0.000 | [0.000, 0.161] |
@@ -95,6 +99,10 @@
 | sft_dev | prior_only | easy_consistent | 20 | 0.100 |
 | sft_dev | prior_only | hard_conflict | 20 | 0.150 |
 | sft_dev | prior_only | hard_consistent | 20 | 0.150 |
+| sft_full_dev | prior_only | easy_conflict | 312 | 0.112 |
+| sft_full_dev | prior_only | easy_consistent | 312 | 0.122 |
+| sft_full_dev | prior_only | hard_conflict | 312 | 0.125 |
+| sft_full_dev | prior_only | hard_consistent | 312 | 0.125 |
 | sft_ood | prior_only | easy_conflict | 20 | 0.150 |
 | sft_ood | prior_only | easy_consistent | 20 | 0.100 |
 | sft_ood | prior_only | hard_conflict | 20 | 0.150 |
@@ -120,6 +128,9 @@
 
 **sft_dev**：prior_effect +0.950，acuity_effect -0.050，interaction +0.050，VDR easy 0.000 / hard 0.100
 - bootstrap（2000 次，按 family）：prior_effect +0.950 [+0.833, +1.000]
+
+**sft_full_dev**：prior_effect +0.939，acuity_effect +0.016，interaction +0.038，VDR easy 0.029 / hard 0.051
+- bootstrap（2000 次，按 family）：prior_effect +0.939 [+0.910, +0.966]
 
 **verify-oracle**：prior_effect +0.000，acuity_effect +0.000，interaction +0.000，VDR MISSING
 
@@ -174,3 +185,18 @@
 | `sft_dev_seed23` | +0.013 | 1 | 0 | 1 |
 
 > 只换训练种子，四格与总体几乎不动（Δ≈0，p=1）→ **主结论不是种子噪声**，而是数据构造里就存在的先验。
+
+## 11. 大测试集复现（312 族/格）
+
+| 格 | n | acc | Wilson 95% |
+|---|---:|---:|---|
+| easy_consistent | 312 | 0.968 | [0.942, 0.982] |
+| easy_conflict | 312 | 0.029 | [0.015, 0.054] |
+| hard_consistent | 312 | 0.952 | [0.922, 0.971] |
+| hard_conflict | 312 | 0.051 | [0.032, 0.082] |
+
+- prior_effect **+0.939**（bootstrap [+0.910, +0.966]）
+- acuity_effect **+0.016**（bootstrap [-0.014, +0.048]）
+- interaction +0.038；VDR easy 0.029 / hard 0.051
+
+> 同一套 pilot 模型、**大 15.6 倍的 held-out 测试集**（每格 312 族）：先验效应更大、acuity 效应的 CI 跨 0。结论与 pilot 一致，但 CI 窄了一个量级。

@@ -1,5 +1,5 @@
 {
-  "stamp": "20261126T023942Z",
+  "stamp": "20261126T030927Z",
   "data": {
     "profile": "pilot",
     "seed": 17,
@@ -2249,6 +2249,291 @@
       ],
       "grid": null
     },
+    "sft_full_dev": {
+      "records": [
+        {
+          "run_id": "sft_full_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.028846153846153848,
+          "ci_low": 0.015248854654179137,
+          "ci_high": 0.05390438096677748,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 123.39679487179492,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.11538461538461539
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.11538461538461539
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.967948717948718,
+          "ci_low": 0.9420155478584838,
+          "ci_high": 0.9824989256064164,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 124.96185897435895,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 0.8717948717948718
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 0.8717948717948718
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.05128205128205128,
+          "ci_low": 0.03180926586813644,
+          "ci_high": 0.08167000615182224,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 123.61955128205122,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.20512820512820512,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.20512820512820512,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.9519230769230769,
+          "ci_low": 0.9222017098365112,
+          "ci_high": 0.9706513090576732,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 122.22884615384609,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 0.8076923076923077,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 0.8076923076923077,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.11217948717948718,
+          "ci_low": 0.08177392566914582,
+          "ci_high": 0.15201887371953277,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 376.2919871794873,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.44871794871794873
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.44871794871794873
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.12179487179487179,
+          "ci_low": 0.09003436380547143,
+          "ci_high": 0.16275530832563662,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 380.30993589743605,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.48717948717948717
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.48717948717948717
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.125,
+          "ci_low": 0.09280382126938792,
+          "ci_high": 0.1663181417758633,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 382.294230769231,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.5,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.5,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_full_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 312,
+          "accuracy": 0.125,
+          "ci_low": 0.09280382126938792,
+          "ci_high": 0.1663181417758633,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 373.56891025641005,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.5,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.5,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 312,
+          "extra": {}
+        }
+      ],
+      "grid": {
+        "run_id": "sft_full_dev",
+        "model_id": "pico:sft",
+        "cells": {
+          "easy_consistent": {
+            "n": 312,
+            "k": 302,
+            "acc": 0.967948717948718,
+            "ci": [
+              0.9420155478584838,
+              0.9824989256064164
+            ],
+            "families": 312
+          },
+          "easy_conflict": {
+            "n": 312,
+            "k": 9,
+            "acc": 0.028846153846153848,
+            "ci": [
+              0.015248854654179137,
+              0.05390438096677748
+            ],
+            "families": 312
+          },
+          "hard_consistent": {
+            "n": 312,
+            "k": 297,
+            "acc": 0.9519230769230769,
+            "ci": [
+              0.9222017098365112,
+              0.9706513090576732
+            ],
+            "families": 312
+          },
+          "hard_conflict": {
+            "n": 312,
+            "k": 16,
+            "acc": 0.05128205128205128,
+            "ci": [
+              0.03180926586813644,
+              0.08167000615182224
+            ],
+            "families": 312
+          }
+        },
+        "n": 1248,
+        "prior_effect": 0.9391025641025641,
+        "acuity_effect": 0.01602564102564108,
+        "interaction": 0.03846153846153855,
+        "vdr_easy": 0.028846153846153848,
+        "vdr_hard": 0.05128205128205128,
+        "bootstrap": {
+          "n_boot": 2000,
+          "prior_effect": {
+            "point": 0.9391025641025641,
+            "lo": 0.9102473714863746,
+            "hi": 0.9663126188966392
+          },
+          "acuity_effect": {
+            "point": 0.01602564102564108,
+            "lo": -0.01407950894355725,
+            "hi": 0.04756697648988528
+          }
+        }
+      }
+    },
     "sft_ood": {
       "records": [
         {
@@ -2795,7 +3080,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.030000000000001,
+          "latency_ms_mean": 13.914999999999997,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2822,7 +3107,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.120000000000001,
+          "latency_ms_mean": 12.849999999999998,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -2849,7 +3134,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.575,
+          "latency_ms_mean": 10.73,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -2876,7 +3161,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.495000000000001,
+          "latency_ms_mean": 12.839999999999998,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -2903,7 +3188,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.66,
+          "latency_ms_mean": 9.274999999999999,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2930,7 +3215,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 10.695,
+          "latency_ms_mean": 11.395,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -2957,7 +3242,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.290000000000001,
+          "latency_ms_mean": 13.239999999999998,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -2984,7 +3269,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 10.905000000000001,
+          "latency_ms_mean": 11.939999999999998,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -3011,7 +3296,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 9.960000000000003,
+          "latency_ms_mean": 12.279999999999998,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -3038,7 +3323,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.665000000000003,
+          "latency_ms_mean": 10.82,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -3065,7 +3350,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 10.915000000000003,
+          "latency_ms_mean": 10.834999999999997,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -3092,7 +3377,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 10.74,
+          "latency_ms_mean": 13.050000000000002,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,

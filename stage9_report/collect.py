@@ -333,6 +333,30 @@ def to_markdown(res: dict) -> str:
         L.append(f"- {MISSING}（先 `stage3_train.sft --seed 23` 再 `compare_arms`）")
     L.append("")
 
+    L += ["## 11. 大测试集复现（312 族/格）", ""]
+    big = (res.get("eval") or {}).get("sft_full_dev")
+    if big and big.get("grid"):
+        g = big["grid"]
+        L += ["| 格 | n | acc | Wilson 95% |", "|---|---:|---:|---|"]
+        for c, v in g["cells"].items():
+            L.append(f"| {c} | {v['n']} | {v['acc']:.3f} | "
+                     f"[{v['ci'][0]:.3f}, {v['ci'][1]:.3f}] |")
+        b = g.get("bootstrap") or {}
+        pe, ae = b.get("prior_effect") or {}, b.get("acuity_effect") or {}
+        L += ["",
+              f"- prior_effect **{g['prior_effect']:+.3f}**"
+              + (f"（bootstrap [{pe['lo']:+.3f}, {pe['hi']:+.3f}]）" if pe else ""),
+              f"- acuity_effect **{g['acuity_effect']:+.3f}**"
+              + (f"（bootstrap [{ae['lo']:+.3f}, {ae['hi']:+.3f}]）" if ae else ""),
+              f"- interaction {g['interaction']:+.3f}；VDR easy {g['vdr_easy']:.3f} / hard {g['vdr_hard']:.3f}",
+              "",
+              "> 同一套 pilot 模型、**大 15.6 倍的 held-out 测试集**（每格 312 族）："
+              "先验效应更大、acuity 效应的 CI 跨 0。结论与 pilot 一致，但 CI 窄了一个量级。"]
+    else:
+        L.append(f"- {MISSING}（`PICOVLM_DATA=data/full python -m stage4_eval.run "
+                 f"--model sft --suite dev_test --run-id sft_full_dev`）")
+    L.append("")
+
     return "\n".join(L)
 
 

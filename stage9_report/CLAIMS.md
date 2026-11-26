@@ -21,7 +21,8 @@
 | 14 | E2 反事实：改问句不变、改数值不响应（探索性，n=6） | 不变性 1.000 [0.610,1.000]；响应 0.000；仍答旧答案 0.833 | `outputs/eval/invariance_sft.json` |
 | 15 | E5 画风迁移：同批题换画风后崩溃（探索性） | 0.512 → 0.000，97.5% 输出空串，McNemar p=9.1e-13 | `reports/ood_sft_ood.md`、`outputs/eval/sft_ood/ood.json` |
 | 16 | 训练种子方差远小于效应（排除"碰巧"） | seed 17 vs 23：Δ +0.013，1 对 0 翻转，McNemar p = 1.0 | `reports/compare_sft_dev_vs_sft_dev_seed23.md` |
-| 17 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
+| 17 | 大测试集复现（15.6×，每格 312 族） | 0.968 / 0.029 / 0.952 / 0.051；prior_effect +0.939 [0.910,0.966]；acuity_effect +0.016 [−0.014,0.048] | `outputs/eval/sft_full_dev/grid.json`、`reports/eval_sft_full_dev.md` |
+| 18 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
 
 ## 三条写简历的规矩
 
