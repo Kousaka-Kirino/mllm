@@ -19,11 +19,12 @@
 | 12 | 页内检索（冻结 SigLIP + 平均池化）不足 | recall@1 0.083 [0.023, 0.258] | `reports/memory_*.md` |
 | 13 | GRPO 组内优势在 pilot 上信号稀疏（诚实负结果） | 6 组中 5 组整组同分 → 优势为 0 | `outputs/grpo/*.json` |
 | 14 | E2 反事实：改问句不变、改数值不响应（探索性，n=6） | 不变性 1.000 [0.610,1.000]；响应 0.000；仍答旧答案 0.833 | `outputs/eval/invariance_sft.json` |
-| 15 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
+| 15 | E5 画风迁移：同批题换画风后崩溃（探索性） | 0.512 → 0.000，97.5% 输出空串，McNemar p=9.1e-13 | `reports/ood_sft_ood.md`、`outputs/eval/sft_ood/ood.json` |
+| 16 | 一键验收 | 见 `outputs/acceptance.md` 合计行 | `outputs/acceptance.md` |
 
 ## 三条写简历的规矩
 
 1. **只写可复现的数**：每个数都能用仓库里的命令重跑出来（数据由种子重建）。
-2. **负结果照写**：第 11、12、13 条比"我们超过了 baseline"更能说明你会做实验。
+2. **负结果照写**：第 11、12、13、15 条比"我们超过了 baseline"更能说明你会做实验。
 3. **区分"我做的"和"借用的"**：SigLIP/Qwen 是预训练权重，你训的是连接器 + LoRA；
    写"可训练参数 1.08M"而不是"我训了 0.5B"。

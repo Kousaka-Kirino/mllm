@@ -55,7 +55,7 @@
 | 2×2 四格 + prior/acuity 效应 + VDR | ✅ | `outputs/eval/sft_dev/grid.json` |
 | Wilson CI / family 聚类 bootstrap / McNemar | ✅ | `analyse.py`、`reports/eval_*.md` |
 | locked_test | 🟡 | 生成好了（160 族），只在最后评测，尚未"开封" |
-| OOD 风格集 | ⬜ | 规划里有，未实现 |
+| OOD 风格集 | ✅ | `stage1_data/ood.py` + `stage4_eval/ood.py`：同批 80 题换画风，0.512 → **0.000**，97.5% 空串（p=9.1e-13） |
 
 ## F. 干预（S5）
 
@@ -94,7 +94,7 @@
 2. **full 规模训练**（对齐 + SFT 各数小时）→ 得到有解释力的主结果；
 3. **干预对照跑满**（课程 / 反事实 / RFT / GRPO 各同算力）→ RQ2 的配对表；
 4. **locked_test 开封一次** → 最终数字；
-5. （可选）OOD 风格集、训练种子方差。
+5. （可选）训练种子方差（E5 已完成：`reports/ood_sft_ood.md`）。
 
 > 第 1–4 步是"把 pilot 结论升级成主结论"的唯一路径；
 > 不做也可以交付（诚实的 pilot 结论 + 完整骨架），但简历上要写清"pilot 规模"。

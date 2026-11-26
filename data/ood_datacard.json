@@ -1,0 +1,21 @@
+{
+  "n": 80,
+  "splits": {
+    "dev_test": 80
+  },
+  "acuity_bins": {
+    "easy": 40,
+    "hard": 40
+  },
+  "glyph_px_model": {
+    "min": 3.0,
+    "max": 9.333
+  },
+  "px_drift_vs_in_domain": {
+    "n": 80,
+    "max": 1.0,
+    "mean": 0.19172499999999998
+  },
+  "note": "同一批题换画风；model 侧字形像素应与 in-domain 一致（字号没变，只有字体/配色/坐标轴变了）",
+  "file": 80
+}

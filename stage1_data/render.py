@@ -31,6 +31,9 @@ BASE_PT = 9.0           # 刻度字号（acuity 以它为准）
 TITLE_PT = 12.0
 ANNOT_PT = 7.0
 PALETTE = ("#4C72B0", "#DD8452", "#55A868", "#C44E52")
+# OOD 风格用一套**视觉上明显不同**的配色与字体，但信息量不变（E5 迁移实验用）
+PALETTE_OOD = ("#1A1A1A", "#7F7F7F", "#C00000", "#2E75B6")
+STYLES = ("in", "ood")
 KINDS = ("bar", "grouped_bar", "line")
 DISTRACTOR_TEXTS = (
     "Source: FY2024", "n = 1,204", "*p < 0.05", "Note: rounded",
@@ -50,10 +53,13 @@ class ChartSpec:
     distractors: int = 0
     noise: float = 0.0
     annotate: bool = False
+    style: str = "in"             # "in" 训练分布 / "ood" 只用于 E5 迁移评测
 
     def __post_init__(self) -> None:
         if self.kind not in KINDS:
             raise ValueError(f"kind 必须是 {KINDS}")
+        if self.style not in STYLES:
+            raise ValueError(f"style 必须是 {STYLES}")
         if self.size % 6:
             raise ValueError("size 必须是 6 的整数倍（保证 dpi 整除）")
         if self.n_series > len(PALETTE):
@@ -148,36 +154,58 @@ def render(spec: ChartSpec, values: np.ndarray | None = None,
 
     fig = Figure(figsize=(FIG_IN, FIG_IN), dpi=dpi)
     FigureCanvasAgg(fig)
-    ax = fig.add_axes((0.13, 0.12, 0.75, 0.72))
+    ood = spec.style == "ood"
+    palette = PALETTE_OOD if ood else PALETTE
+    ax = fig.add_axes((0.16, 0.20, 0.78, 0.66) if ood else (0.13, 0.12, 0.75, 0.72))
+    if ood:
+        # 衬线字体 + 全框 + 双轴网格 + 斜的刻度标签：模型没见过的渲染风格
+        fig.set_facecolor("white")
+        ax.set_facecolor("#FAFAFA")
 
     x = np.arange(spec.n_categories)
     if spec.kind == "line":
         for i in range(spec.n_series):
-            ax.plot(x, values[i], marker="o", ms=3 * fs, lw=1.6 * fs,
-                    color=PALETTE[i], label=series[i])
+            ax.plot(x, values[i], marker="s" if ood else "o", ms=3 * fs,
+                    lw=(2.4 if ood else 1.6) * fs,
+                    color=palette[i], label=series[i])
     elif spec.kind == "grouped_bar" and spec.n_series > 1:
         width = 0.8 / spec.n_series
         for i in range(spec.n_series):
             offset = (i - (spec.n_series - 1) / 2) * width
-            ax.bar(x + offset, values[i], width * 0.92, color=PALETTE[i],
+            ax.bar(x + offset, values[i], width * 0.92, color=palette[i],
                    label=series[i])
     else:
-        ax.bar(x, values[0], 0.7, color=PALETTE[0])
+        ax.bar(x, values[0], 0.7, color=palette[0],
+               edgecolor="#222222" if ood else "none", linewidth=0.8 if ood else 0)
         if spec.annotate:
             for xi, v in zip(x, values[0]):
                 ax.text(xi, v + 1.5, f"{v:g}", ha="center", va="bottom",
                         fontsize=ANNOT_PT * fs, color="#333333")
 
     ax.set_xticks(x)
-    ax.set_xticklabels(categories, fontsize=BASE_PT * fs)
+    if ood:
+        ax.set_xticklabels(categories, fontsize=BASE_PT * fs, rotation=45,
+                           fontfamily="serif")
+    else:
+        ax.set_xticklabels(categories, fontsize=BASE_PT * fs)
     ax.tick_params(axis="y", labelsize=BASE_PT * fs)
     ax.set_ylim(0, max(110, float(values.max()) * 1.18))
-    ax.set_title("Quarterly metric by category", fontsize=TITLE_PT * fs, pad=8 * fs)
-    ax.set_xlabel("Category", fontsize=BASE_PT * fs)
-    ax.set_ylabel("Value", fontsize=BASE_PT * fs)
-    ax.grid(axis="y", alpha=0.25, lw=0.6)
-    for spine in ("top", "right"):
-        ax.spines[spine].set_visible(False)
+    title = "Category breakdown (2024)" if ood else "Quarterly metric by category"
+    ax.set_title(title, fontsize=TITLE_PT * fs, pad=8 * fs,
+                 fontfamily="serif" if ood else None)
+    ax.set_xlabel("category" if ood else "Category", fontsize=BASE_PT * fs,
+                  fontfamily="serif" if ood else None)
+    ax.set_ylabel("value" if ood else "Value", fontsize=BASE_PT * fs,
+                  fontfamily="serif" if ood else None)
+    if ood:
+        ax.grid(True, alpha=0.5, lw=0.7, ls=":")
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_linewidth(1.4)
+    else:
+        ax.grid(axis="y", alpha=0.25, lw=0.6)
+        for spine in ("top", "right"):
+            ax.spines[spine].set_visible(False)
 
     if spec.n_series > 1:
         ax.legend(fontsize=BASE_PT * fs, frameon=False, ncol=min(spec.n_series, 4),

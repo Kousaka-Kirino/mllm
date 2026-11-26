@@ -82,6 +82,24 @@ EOS 监督带来的变化是"一致格从 0.75 涨到 0.95/1.00"，而不是"开
 > 这三条写进简历时，必须带"pilot、每格 20 条、CI 很宽"的限定语。
 > 把它们写成"我们发现模型不看图"就是造假——复试老师一问样本量就会露。
 
+### E5：换画风（`stage4_eval/ood.py`）
+
+同一批题、同一张表的数值，只把图重画成"训练时没见过"的样子
+（衬线字体、四边全框、双轴虚线网格、斜刻度、另一套配色；粒度不变，
+实测字形像素与 in-domain 差 ≤ 1px）。所以这是**同实例配对**，可以直接 McNemar。
+
+| | acc | 
+|---|---:|
+| in-domain `sft_dev` | 0.512 |
+| OOD `sft_ood` | **0.000** |
+
+80 对里只有 in-domain 对 41 条、OOD 对 0 条（p = 9.1e-13），
+而且 **97.5% 的 OOD 输出是空串**——不是"看错图"，是"根本不出话"。
+
+> 这条的教训：pilot 的 237 步、3.38M 可训练参数，学到的是**训练分布的表面统计**
+> （字体、配色、坐标轴样式），而不是"这组柱子里哪根最高"。
+> 想让它稳，需要的不是更大模型，是更多样式覆盖——这正是 S5 反事实增广的动机。
+
 ---
 
 ## 4. 代码与命令
@@ -92,6 +110,9 @@ python -m stage4_eval.run --model prior --suite dev_test \
 python -m stage4_eval.run --model sft --suite dev_test \
     --conditions correct_image,prior_only,mismatched_image --run-id sft_dev
 python -m stage4_eval.report --run-id sft_dev --baseline prior_dev
+python -m stage1_data.ood                                # E5：同批题换画风
+python -m stage4_eval.run --model sft --suite ood_style --run-id sft_ood
+python -m stage4_eval.ood --in-domain sft_dev --ood sft_ood
 python -m stage4_eval.verify_stage4
 ```
 

@@ -61,7 +61,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--model", default="prior",
                     choices=["prior", "align", "sft"])
     ap.add_argument("--suite", default="dev_test",
-                    choices=["dev_test", "locked_test", "val"])
+                    choices=["dev_test", "locked_test", "val", "ood_style"],
+                    help="ood_style = E5 用同批题换画风（stage1_data.ood 生成）")
     ap.add_argument("--conditions", default="correct_image")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--connector", default=None,

@@ -74,6 +74,21 @@ def check_mismatch_test() -> str:
             f"mismatched_only={cm['mismatched_image_only']} p={cm['p_value']:.4g}")
 
 
+def check_ood() -> str:
+    """E5：画风迁移报告若存在，必须能对齐同批样本（配对 n 与 dev_test 一致）。"""
+    p = OUTPUTS / "eval" / "sft_ood" / "ood.json"
+    if not p.exists():
+        raise Skip("没跑 E5（stage1_data.ood + stage4_eval.run --suite ood_style）")
+    import json
+
+    d = json.loads(p.read_text(encoding="utf-8"))
+    require(d["n_pairs"] > 0, "配对数 n_pairs 为 0")
+    require(0.0 <= d["acc_ood"] <= 1.0, "OOD 准确率越界")
+    require(d["empty_ood"] <= d["n_pairs"], "空回答数超过配对数")
+    return (f"n={d['n_pairs']} acc {d['acc_in']:.3f}→{d['acc_ood']:.3f} "
+            f"empty={d['empty_ood']} p={d['p_value']:.3g}")
+
+
 def check_records() -> str:
     import json
 
@@ -147,6 +162,7 @@ def main() -> int:
         ("report-written", check_report),
         ("sft-run", check_sft_run),
         ("mismatch-test", check_mismatch_test),
+        ("ood-transfer", check_ood),
     ], "S4 验收（2.0）")
 
 

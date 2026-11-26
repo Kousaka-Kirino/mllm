@@ -1,6 +1,6 @@
 # PicoVLM · 结果汇总（自动生成）
 
-生成时间：20261126T020304Z
+生成时间：20261126T021054Z
 
 > 本文件由 `python -m stage9_report.collect` 生成，不要手改。
 > 每个数字都能在 `reports/RESULTS.json` 与 `outputs/` 里找到来源。
@@ -52,6 +52,10 @@
 | sft_dev | easy_consistent | 20 | 0.950 | [0.764, 0.991] |
 | sft_dev | hard_conflict | 20 | 0.100 | [0.028, 0.301] |
 | sft_dev | hard_consistent | 20 | 1.000 | [0.839, 1.000] |
+| sft_ood | easy_conflict | 20 | 0.000 | [0.000, 0.161] |
+| sft_ood | easy_consistent | 20 | 0.000 | [0.000, 0.161] |
+| sft_ood | hard_conflict | 20 | 0.000 | [0.000, 0.161] |
+| sft_ood | hard_consistent | 20 | 0.000 | [0.000, 0.161] |
 | verify-oracle | easy_conflict | 24 | 1.000 | [0.862, 1.000] |
 | verify-oracle | easy_consistent | 24 | 1.000 | [0.862, 1.000] |
 | verify-oracle | hard_conflict | 24 | 1.000 | [0.862, 1.000] |
@@ -86,6 +90,10 @@
 | sft_dev | prior_only | easy_consistent | 20 | 0.100 |
 | sft_dev | prior_only | hard_conflict | 20 | 0.150 |
 | sft_dev | prior_only | hard_consistent | 20 | 0.150 |
+| sft_ood | prior_only | easy_conflict | 20 | 0.150 |
+| sft_ood | prior_only | easy_consistent | 20 | 0.100 |
+| sft_ood | prior_only | hard_conflict | 20 | 0.150 |
+| sft_ood | prior_only | hard_consistent | 20 | 0.150 |
 | verify_prior | image_only | easy_conflict | 20 | 0.000 |
 | verify_prior | image_only | easy_consistent | 20 | 1.000 |
 | verify_prior | image_only | hard_conflict | 20 | 0.000 |
@@ -144,3 +152,12 @@
 
 > 只改问句时答案几乎不变（不变性率高），但把表里的数值改掉、金标换人后，模型仍答旧答案（响应率 0）→ 它读的是题面与先验，不是图。
 > n 很小（数值变体只支持 maxcat），**探索性**，不进主结论。
+
+## 9. E5 画风迁移（探索性）
+
+| in-domain | OOD | acc(in) | acc(OOD) | Δ | 空回答率(OOD) | McNemar p |
+|---|---|---:|---:|---:|---:|---:|
+| `sft_dev` | `sft_ood` | 0.512 | 0.000 | -0.512 | 97.5% (78/80) | 9.09e-13 |
+
+> 同批题只换画风（衬线字体 / 全框 / 双轴网格 / 另一套配色），准确率掉到 0，且 97.5% 的输出是**空串**——这不是「看错了图」，是「根本不出话」。
+> 237 步、3.38M 可训练参数下，模型学到的是训练分布的表面统计，这条比 2×2 更能说明它有多脆。
