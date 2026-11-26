@@ -165,12 +165,14 @@ def bin_of(px: float, th: dict[str, Any]) -> str:
 # --------------------------------------------------------------------- 构建
 class Builder:
     def __init__(self, seed: int, profile: str = "pilot", rho: float = 0.7,
-                 cfg: dict | None = None) -> None:
+                 cfg: dict | None = None, out: "Path | str" = "data") -> None:
         cfg = cfg or load_config("data.yaml")
         prof = cfg["profiles"][profile]
         self.seed = seed
         self.profile = profile
         self.rho = rho
+        self.out_root = ROOT / str(out)
+        self.img_dir = self.out_root / "synth" / "images"
         self.n = {k: int(prof[k]) for k in
                   ("n_train", "n_val", "n_dev_test", "n_locked_test")}
         self.size = int(cfg["render"]["size"])
@@ -185,7 +187,7 @@ class Builder:
         res = render(item.spec, item.values, measure=True)
         h = hashlib.sha1(res.image.tobytes()).hexdigest()[:16]
         if h not in self._img_cache:
-            rel = (DATA / "synth" / "images" / f"{h}.png").relative_to(ROOT).as_posix()
+            rel = (self.img_dir / f"{h}.png").relative_to(ROOT).as_posix()
             out = ROOT / rel
             io.ensure_dir(out.parent)
             res.image.save(out, "PNG")
@@ -337,14 +339,16 @@ def main(argv: list[str] | None = None) -> int:
         frozen = io.read_json(th_path)
         print(f"[build] 复用冻结阈值：{th_path.relative_to(ROOT)}")
 
-    b = Builder(seed=args.seed, profile=args.profile, rho=args.prior_strength)
+    b = Builder(seed=args.seed, profile=args.profile, rho=args.prior_strength,
+                out=args.out)
     b.build_train_like("train", b.n["n_train"], salt=1)
     b.build_train_like("val", b.n["n_val"], salt=2)
     b.build_balanced("dev_test", b.n["n_dev_test"], salt=3)
     b.build_balanced("locked_test", b.n["n_locked_test"], salt=4)
     samples, card, thresholds = b.finalize(frozen)
 
-    out = ROOT / args.out / "synth"
+    out_root = ROOT / args.out
+    out = out_root / "synth"
     io.ensure_dir(out)
     hashes: dict[str, str] = {}
     for split in ("train", "val", "dev_test", "locked_test"):
@@ -353,13 +357,13 @@ def main(argv: list[str] | None = None) -> int:
         io.write_jsonl(path, [s.to_dict() for s in part])
         hashes[path.relative_to(ROOT).as_posix()] = io.sha256_file(path)
         print(f"[build] {split:<11} {len(part):>5} 条  family {len({s.family_id for s in part}):>4}")
-    for img in sorted((out / "images").glob("*.png"))[:5]:
+    for img in sorted(b.img_dir.glob("*.png"))[:5]:
         hashes[img.relative_to(ROOT).as_posix()] = io.sha256_file(img)
 
-    io.write_json(DATA / "datacard.json", card)
+    io.write_json(out_root / "datacard.json", card)
     io.write_json(DATA / "acuity_thresholds.json", thresholds)
-    io.write_json(DATA / "hashes.json", {"seed": args.seed, "profile": args.profile,
-                                         "files": hashes})
+    io.write_json(out_root / "hashes.json", {"seed": args.seed, "profile": args.profile,
+                                             "files": hashes})
     print(f"[build] 图 {card['images']} 张；ρ 实测 {card['rho_measured']}（要求 {args.prior_strength}）")
     print(f"[build] acuity 阈值 easy≥{thresholds['easy_min_px_model']}px "
           f"mid≥{thresholds['mid_min_px_model']}px extreme<{thresholds['extreme_max_px_model']}px")
