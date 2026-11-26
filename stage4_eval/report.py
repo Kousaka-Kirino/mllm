@@ -23,6 +23,19 @@ def build(run_id: str, baseline: str | None = None, suite: str = "dev_test") -> 
     cells = cell_accuracy(preds, samples)
     eff = effects(cells)
     boot = bootstrap_effect(preds, samples, n_boot=2000)
+    # 把 2×2 与效应量落成机器可读文件，S9 的 collect.py 直接读它
+    grid = {
+        "run_id": run_id,
+        "model_id": preds[0]["model_id"] if preds else "unknown",
+        "cells": cells,
+        "n": sum(v["n"] for v in cells.values()),
+        **eff,
+        "bootstrap": ({"n_boot": 2000,
+                       "prior_effect": boot.get("prior_effect"),
+                       "acuity_effect": boot.get("acuity_effect")}
+                      if boot else None),
+    }
+    write_json(OUTPUTS / "eval" / run_id / "grid.json", grid)
     md = [f"# S4 2×2 诊断 · `{run_id}`", "",
           f"- 样本数：{sum(v['n'] for v in cells.values())}（{suite}），"
           f"family 数：{len({p['family_id'] for p in preds})}",

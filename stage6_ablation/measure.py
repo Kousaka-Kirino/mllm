@@ -25,13 +25,17 @@ import torch
 from picovlm.budget import CONNECTORS, count_tokens, patches
 from picovlm.config import OUTPUTS, load_config, model_config_from
 from picovlm.io_utils import ensure_dir, utc_stamp, write_json
-from picovlm.model.vlm import PicoVLM
+from picovlm.model.vlm import Batch, PicoVLM
 
 
 def stat(vals: list[float]) -> dict:
     vals = sorted(vals)
     n = len(vals)
-    return {"median": vals[n // 2], "min": vals[0], "max": vals[-1]}
+    if n % 2:
+        med = vals[n // 2]
+    else:
+        med = 0.5 * (vals[n // 2 - 1] + vals[n // 2])
+    return {"median": med, "min": vals[0], "max": vals[-1]}
 
 
 @torch.no_grad()
@@ -44,8 +48,8 @@ def bench_one(model: PicoVLM, batch: int = 1, seq: int = 40,
     for _ in range(repeats):
         torch.cuda.reset_peak_memory_stats()
         t0 = time.time()
-        model({"pixel_values": px, "input_ids": ids, "attention_mask": mask,
-               "labels": None})
+        model(Batch(pixel_values=px, input_ids=ids, attention_mask=mask,
+                    labels=None))
         lat.append((time.time() - t0) * 1000)
         peaks.append(torch.cuda.max_memory_allocated() / 2**20)
     return {"batch": batch, "seq": seq, "latency_ms": stat(lat),

@@ -1,0 +1,3031 @@
+{
+  "stamp": "20261126T010342Z",
+  "data": {
+    "profile": "pilot",
+    "seed": 17,
+    "rho_requested": 0.7,
+    "rho_measured": 0.7406,
+    "counts": {
+      "train": 318,
+      "val": 78,
+      "dev_test": 80,
+      "locked_test": 160
+    },
+    "families": {
+      "train": 318,
+      "val": 78,
+      "dev_test": 80,
+      "locked_test": 160
+    },
+    "cells": {
+      "train": {
+        "hard/consistent": 76,
+        "hard/conflict": 33,
+        "easy/consistent": 81,
+        "easy/conflict": 22,
+        "hard/neutral": 36,
+        "easy/neutral": 28,
+        "mid/neutral": 42
+      },
+      "val": {
+        "hard/conflict": 11,
+        "easy/conflict": 5,
+        "hard/consistent": 19,
+        "easy/consistent": 17,
+        "easy/neutral": 11,
+        "hard/neutral": 9,
+        "mid/neutral": 6
+      },
+      "dev_test": {
+        "easy/consistent": 20,
+        "easy/conflict": 20,
+        "hard/consistent": 20,
+        "hard/conflict": 20
+      },
+      "locked_test": {
+        "easy/consistent": 40,
+        "easy/conflict": 40,
+        "hard/consistent": 40,
+        "hard/conflict": 40
+      }
+    },
+    "prior_types": {
+      "position": 126,
+      "marginal": 126,
+      "numeric": 126,
+      "order": 126,
+      "none": 132
+    },
+    "acuity_bins": {
+      "hard": 304,
+      "easy": 284,
+      "mid": 48
+    },
+    "glyph_px_model": {
+      "n": 636,
+      "median": 6.0,
+      "min": 3.0,
+      "max": 9.0,
+      "iqr": 4.0
+    },
+    "acuity_thresholds": {
+      "easy_min_px_model": 6.5,
+      "mid_min_px_model": 4.5,
+      "extreme_max_px_model": 3.0,
+      "n_measurements": 636,
+      "median": 6.0,
+      "p05": 3.0,
+      "p95": 9.0,
+      "coverage": {
+        "below_extreme": 0,
+        "hard": 304,
+        "mid": 48,
+        "easy": 284
+      },
+      "rule": "easy: px >= easy_min; mid: mid_min <= px < easy_min; hard: extreme_max <= px < mid_min; extreme: px < extreme_max",
+      "source": "预注册常量（pilot 实测着墨高≈6.2×font_scale 时校准），写入即冻结"
+    },
+    "images": 636
+  },
+  "train": {
+    "sft_20261126T004058Z": {
+      "steps": 23,
+      "first": {
+        "step": 10,
+        "epoch": 0,
+        "loss": 10.302201747894287,
+        "lr": 0.00019986854591672626,
+        "elapsed_s": 7.8,
+        "peak_mib": 3770
+      },
+      "last": {
+        "step": 230,
+        "epoch": 2,
+        "loss": 0.727926387928892,
+        "lr": 7.374363752458692e-07,
+        "elapsed_s": 208.9,
+        "peak_mib": 3770
+      }
+    }
+  },
+  "eval": {
+    "first_option-test": {
+      "records": [
+        {
+          "run_id": "first_option-test",
+          "suite": "easy_conflict",
+          "model_id": "policy:first_option",
+          "n": 24,
+          "accuracy": 0.0,
+          "ci_low": 1.3877787807814457e-17,
+          "ci_high": 0.13797620467498017,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.00020833333333333335,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 0.0
+            }
+          },
+          "extra": {
+            "k": 0,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "first_option-test",
+          "suite": "easy_consistent",
+          "model_id": "policy:first_option",
+          "n": 24,
+          "accuracy": 0.75,
+          "ci_low": 0.55100555994846,
+          "ci_high": 0.8800063377140499,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0006250000000000001,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 0.75
+            }
+          },
+          "extra": {
+            "k": 18,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "first_option-test",
+          "suite": "hard_conflict",
+          "model_id": "policy:first_option",
+          "n": 24,
+          "accuracy": 0.0,
+          "ci_low": 1.3877787807814457e-17,
+          "ci_high": 0.13797620467498017,
+          "tokens_mean": null,
+          "latency_ms_mean": 8.333333333333333e-05,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 0.0
+            }
+          },
+          "extra": {
+            "k": 0,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "first_option-test",
+          "suite": "hard_consistent",
+          "model_id": "policy:first_option",
+          "n": 24,
+          "accuracy": 0.75,
+          "ci_low": 0.55100555994846,
+          "ci_high": 0.8800063377140499,
+          "tokens_mean": null,
+          "latency_ms_mean": 8.333333333333333e-05,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 0.75
+            }
+          },
+          "extra": {
+            "k": 18,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "first_option-test",
+          "suite": "neutral",
+          "model_id": "policy:first_option",
+          "n": 24,
+          "accuracy": 0.4166666666666667,
+          "ci_low": 0.24467602609811764,
+          "ci_high": 0.6116533413477124,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.00041666666666666675,
+          "by_qtype": {
+            "maxseries": {
+              "n": 12,
+              "acc": 0.4167
+            },
+            "value": {
+              "n": 12,
+              "acc": 0.4167
+            }
+          },
+          "by_prior": {
+            "none": {
+              "n": 24,
+              "acc": 0.4167
+            }
+          },
+          "by_acuity": {
+            "mid": {
+              "n": 24,
+              "acc": 0.4167
+            }
+          },
+          "extra": {
+            "k": 10,
+            "tol": 0.05
+          }
+        }
+      ],
+      "grid": null
+    },
+    "oracle-test": {
+      "records": [
+        {
+          "run_id": "oracle-test",
+          "suite": "easy_conflict",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "oracle-test",
+          "suite": "easy_consistent",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.00025,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "oracle-test",
+          "suite": "hard_conflict",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 4.1666666666666665e-05,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "oracle-test",
+          "suite": "hard_consistent",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "oracle-test",
+          "suite": "neutral",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0002916666666666667,
+          "by_qtype": {
+            "maxseries": {
+              "n": 12,
+              "acc": 1.0
+            },
+            "value": {
+              "n": 12,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "none": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "mid": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        }
+      ],
+      "grid": null
+    },
+    "prior-test": {
+      "records": [
+        {
+          "run_id": "prior-test",
+          "suite": "easy_conflict",
+          "model_id": "policy:prior",
+          "n": 24,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.13797620467498017,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.00025,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 0.0
+            }
+          },
+          "extra": {
+            "k": 0,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "prior-test",
+          "suite": "easy_consistent",
+          "model_id": "policy:prior",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.00037500000000000006,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "prior-test",
+          "suite": "hard_conflict",
+          "model_id": "policy:prior",
+          "n": 24,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.13797620467498017,
+          "tokens_mean": null,
+          "latency_ms_mean": 4.1666666666666665e-05,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 0.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 0.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 0.0
+            }
+          },
+          "extra": {
+            "k": 0,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "prior-test",
+          "suite": "hard_consistent",
+          "model_id": "policy:prior",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 4.1666666666666665e-05,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "prior-test",
+          "suite": "neutral",
+          "model_id": "policy:prior",
+          "n": 24,
+          "accuracy": 0.20833333333333334,
+          "ci_low": 0.09244825352851857,
+          "ci_high": 0.40470453253188665,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.000125,
+          "by_qtype": {
+            "maxseries": {
+              "n": 12,
+              "acc": 0.4167
+            },
+            "value": {
+              "n": 12,
+              "acc": 0.0
+            }
+          },
+          "by_prior": {
+            "none": {
+              "n": 24,
+              "acc": 0.2083
+            }
+          },
+          "by_acuity": {
+            "mid": {
+              "n": 24,
+              "acc": 0.2083
+            }
+          },
+          "extra": {
+            "k": 5,
+            "tol": 0.05
+          }
+        }
+      ],
+      "grid": {
+        "run_id": "prior-test",
+        "model_id": "policy:prior",
+        "table": {
+          "easy_consistent": 1.0,
+          "easy_conflict": 0.0,
+          "hard_consistent": 1.0,
+          "hard_conflict": 0.0
+        },
+        "cells": {
+          "easy_consistent": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "easy_conflict": {
+            "n": 24,
+            "k": 0,
+            "accuracy": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.13797620467498017
+          },
+          "hard_consistent": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "hard_conflict": {
+            "n": 24,
+            "k": 0,
+            "accuracy": 0.0,
+            "ci_low": 0.0,
+            "ci_high": 0.13797620467498017
+          }
+        },
+        "prior_effect": 1.0,
+        "acuity_effect": 0.0,
+        "interaction": 0.0,
+        "vdr": {},
+        "n": 120
+      }
+    },
+    "prior_dev": {
+      "records": [
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 10.594999999999999,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 14.725000000000003,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 11.99,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 8.405000000000001,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 11.95,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 10.815000000000001,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 9.175,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 12.474999999999998,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 13.614999999999998,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 11.194999999999999,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 14.475,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 11.819999999999999,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "prior_dev",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        }
+      ],
+      "grid": null
+    },
+    "sanity-oracle": {
+      "records": [
+        {
+          "run_id": "sanity-oracle",
+          "suite": "easy_conflict",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "sanity-oracle",
+          "suite": "easy_consistent",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.00016666666666666666,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "sanity-oracle",
+          "suite": "hard_conflict",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "sanity-oracle",
+          "suite": "hard_consistent",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "sanity-oracle",
+          "suite": "neutral",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "maxseries": {
+              "n": 12,
+              "acc": 1.0
+            },
+            "value": {
+              "n": 12,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "none": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "mid": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        }
+      ],
+      "grid": {
+        "run_id": "sanity-oracle",
+        "model_id": "policy:oracle",
+        "table": {
+          "easy_consistent": 1.0,
+          "easy_conflict": 1.0,
+          "hard_consistent": 1.0,
+          "hard_conflict": 1.0
+        },
+        "cells": {
+          "easy_consistent": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "easy_conflict": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "hard_consistent": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "hard_conflict": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          }
+        },
+        "prior_effect": 0.0,
+        "acuity_effect": 0.0,
+        "interaction": 0.0,
+        "vdr": {},
+        "n": 120
+      }
+    },
+    "sft_dev": {
+      "records": [
+        {
+          "run_id": "sft_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 115.225,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.95,
+          "ci_low": 0.763868806553258,
+          "ci_high": 0.9911185511992047,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 138.525,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 0.8
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 0.8
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.05,
+          "ci_low": 0.008881448800795402,
+          "ci_high": 0.23613119344674205,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 116.40500000000002,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.2,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.2,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 113.24999999999997,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 120.07000000000001,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.95,
+          "ci_low": 0.763868806553258,
+          "ci_high": 0.9911185511992047,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 118.98499999999999,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 0.8
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 0.8
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.05,
+          "ci_low": 0.008881448800795402,
+          "ci_high": 0.23613119344674205,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 117.24000000000001,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.2,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.2,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 117.10999999999999,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "easy_conflict",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.1,
+          "ci_low": 0.027866481213768224,
+          "ci_high": 0.3010336452284873,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 349.57500000000005,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.4
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.4
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "easy_consistent",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.25,
+          "ci_low": 0.11186170140766569,
+          "ci_high": 0.468700877618744,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 359.87999999999994,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "hard_conflict",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 343.395,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "sft_dev",
+          "suite": "hard_consistent",
+          "model_id": "pico:sft",
+          "n": 20,
+          "accuracy": 0.2,
+          "ci_low": 0.08065766257979806,
+          "ci_high": 0.41601743225189364,
+          "tokens_mean": 576.0,
+          "latency_ms_mean": 348.31,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.8,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.8,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        }
+      ],
+      "grid": {
+        "run_id": "sft_dev",
+        "model_id": "pico:sft",
+        "cells": {
+          "easy_consistent": {
+            "n": 20,
+            "k": 19,
+            "acc": 0.95,
+            "ci": [
+              0.763868806553258,
+              0.9911185511992047
+            ],
+            "families": 20
+          },
+          "easy_conflict": {
+            "n": 20,
+            "k": 0,
+            "acc": 0.0,
+            "ci": [
+              0.0,
+              0.16112515805281938
+            ],
+            "families": 20
+          },
+          "hard_consistent": {
+            "n": 20,
+            "k": 20,
+            "acc": 1.0,
+            "ci": [
+              0.8388748419471806,
+              1.0
+            ],
+            "families": 20
+          },
+          "hard_conflict": {
+            "n": 20,
+            "k": 1,
+            "acc": 0.05,
+            "ci": [
+              0.008881448800795402,
+              0.23613119344674205
+            ],
+            "families": 20
+          }
+        },
+        "n": 80,
+        "prior_effect": 0.95,
+        "acuity_effect": -0.050000000000000044,
+        "interaction": 0.0,
+        "vdr_easy": 0.0,
+        "vdr_hard": 0.05,
+        "bootstrap": {
+          "n_boot": 2000,
+          "prior_effect": {
+            "point": 0.95,
+            "lo": 0.8333333333333334,
+            "hi": 1.0
+          },
+          "acuity_effect": {
+            "point": -0.050000000000000044,
+            "lo": -0.16666666666666663,
+            "hi": 0.0
+          }
+        }
+      }
+    },
+    "verify-oracle": {
+      "records": [
+        {
+          "run_id": "verify-oracle",
+          "suite": "easy_conflict",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "verify-oracle",
+          "suite": "easy_consistent",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0005416666666666668,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "easy": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "verify-oracle",
+          "suite": "hard_conflict",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "verify-oracle",
+          "suite": "hard_consistent",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "compare": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "count": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "maxcat": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "marginal": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "numeric": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "order": {
+              "n": 6,
+              "acc": 1.0
+            },
+            "position": {
+              "n": 6,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "hard": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        },
+        {
+          "run_id": "verify-oracle",
+          "suite": "neutral",
+          "model_id": "policy:oracle",
+          "n": 24,
+          "accuracy": 1.0,
+          "ci_low": 0.8620237953250198,
+          "ci_high": 1.0,
+          "tokens_mean": null,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "maxseries": {
+              "n": 12,
+              "acc": 1.0
+            },
+            "value": {
+              "n": 12,
+              "acc": 1.0
+            }
+          },
+          "by_prior": {
+            "none": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "by_acuity": {
+            "mid": {
+              "n": 24,
+              "acc": 1.0
+            }
+          },
+          "extra": {
+            "k": 24,
+            "tol": 0.05
+          }
+        }
+      ],
+      "grid": {
+        "run_id": "verify-oracle",
+        "model_id": "policy:oracle",
+        "table": {
+          "easy_consistent": 1.0,
+          "easy_conflict": 1.0,
+          "hard_consistent": 1.0,
+          "hard_conflict": 1.0
+        },
+        "cells": {
+          "easy_consistent": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "easy_conflict": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "hard_consistent": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          },
+          "hard_conflict": {
+            "n": 24,
+            "k": 24,
+            "accuracy": 1.0,
+            "ci_low": 0.8620237953250198,
+            "ci_high": 1.0
+          }
+        },
+        "prior_effect": 0.0,
+        "acuity_effect": 0.0,
+        "interaction": 0.0,
+        "vdr": {},
+        "n": 120
+      }
+    },
+    "verify_prior": {
+      "records": [
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 9.294999999999998,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 14.2,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 8.84,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 11.805000000000003,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "correct_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 11.315000000000001,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 9.499999999999998,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 10.919999999999998,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 8.305000000000001,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "image_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 12.54,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 10.579999999999998,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 13.404999999999998,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 13.094999999999999,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "mismatched_image",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "maxcat": 0.0,
+            "compare": 0.0,
+            "count": 0.0,
+            "order": 0.0
+          },
+          "by_prior": {
+            "position": 0.0,
+            "marginal": 0.0,
+            "numeric": 0.0,
+            "order": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "easy_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "maxcat": 1.0,
+            "compare": 1.0,
+            "count": 1.0,
+            "order": 1.0
+          },
+          "by_prior": {
+            "position": 1.0,
+            "marginal": 1.0,
+            "numeric": 1.0,
+            "order": 1.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_conflict",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.16112515805281938,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "count": 0.0,
+            "order": 0.0,
+            "maxcat": 0.0,
+            "compare": 0.0
+          },
+          "by_prior": {
+            "numeric": 0.0,
+            "order": 0.0,
+            "position": 0.0,
+            "marginal": 0.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        },
+        {
+          "run_id": "verify_prior",
+          "suite": "hard_consistent",
+          "model_id": "rule:prior",
+          "n": 20,
+          "accuracy": 1.0,
+          "ci_low": 0.8388748419471806,
+          "ci_high": 1.0,
+          "tokens_mean": 0.0,
+          "latency_ms_mean": 0.0,
+          "by_qtype": {
+            "count": 1.0,
+            "order": 1.0,
+            "maxcat": 1.0,
+            "compare": 1.0
+          },
+          "by_prior": {
+            "numeric": 1.0,
+            "order": 1.0,
+            "position": 1.0,
+            "marginal": 1.0
+          },
+          "by_acuity": {},
+          "condition": "prior_only",
+          "n_families": 20,
+          "extra": {}
+        }
+      ],
+      "grid": {
+        "run_id": "verify_prior",
+        "model_id": "rule:prior",
+        "cells": {
+          "easy_consistent": {
+            "n": 20,
+            "k": 20,
+            "acc": 1.0,
+            "ci": [
+              0.8388748419471806,
+              1.0
+            ],
+            "families": 20
+          },
+          "easy_conflict": {
+            "n": 20,
+            "k": 0,
+            "acc": 0.0,
+            "ci": [
+              0.0,
+              0.16112515805281938
+            ],
+            "families": 20
+          },
+          "hard_consistent": {
+            "n": 20,
+            "k": 20,
+            "acc": 1.0,
+            "ci": [
+              0.8388748419471806,
+              1.0
+            ],
+            "families": 20
+          },
+          "hard_conflict": {
+            "n": 20,
+            "k": 0,
+            "acc": 0.0,
+            "ci": [
+              0.0,
+              0.16112515805281938
+            ],
+            "families": 20
+          }
+        },
+        "n": 80,
+        "prior_effect": 1.0,
+        "acuity_effect": 0.0,
+        "interaction": 0.0,
+        "vdr_easy": 0.0,
+        "vdr_hard": 0.0,
+        "bootstrap": {
+          "n_boot": 2000,
+          "prior_effect": {
+            "point": 1.0,
+            "lo": 1.0,
+            "hi": 1.0
+          },
+          "acuity_effect": {
+            "point": 0.0,
+            "lo": 0.0,
+            "hi": 0.0
+          }
+        }
+      }
+    }
+  },
+  "bench": {
+    "file": "connectors_20261126T004849Z.json",
+    "rows": [
+      {
+        "connector": "mlp",
+        "tokens": 576,
+        "params_m": 2.296448,
+        "latency_ms": {
+          "median": 76.48110389709473,
+          "min": 51.31220817565918,
+          "max": 308.60018730163574
+        },
+        "peak_mib": {
+          "median": 1339.6787109375,
+          "min": 1339.6787109375,
+          "max": 1339.6787109375
+        },
+        "accuracy": null
+      },
+      {
+        "connector": "resampler",
+        "tokens": 64,
+        "params_m": 20.042624,
+        "latency_ms": {
+          "median": 40.4505729675293,
+          "min": 40.05575180053711,
+          "max": 40.79866409301758
+        },
+        "peak_mib": {
+          "median": 1219.173828125,
+          "min": 1219.173828125,
+          "max": 1219.173828125
+        },
+        "accuracy": null
+      },
+      {
+        "connector": "pixelshuffle",
+        "tokens": 144,
+        "params_m": 2.753408,
+        "latency_ms": {
+          "median": 40.59648513793945,
+          "min": 39.84427452087402,
+          "max": 44.341325759887695
+        },
+        "peak_mib": {
+          "median": 1207.49560546875,
+          "min": 1207.49560546875,
+          "max": 1207.49560546875
+        },
+        "accuracy": null
+      }
+    ]
+  },
+  "memory": {
+    "file": "memory_eval_20261126T004948Z.json",
+    "result": {
+      "stamp": "20261126T004948Z",
+      "recall": {
+        "n": 24,
+        "recall_at_1": 0.08333333333333333,
+        "recall_at_3": 0.16666666666666666,
+        "recall_at_1_ci": [
+          0.023158815297043306,
+          0.25848802193210685
+        ]
+      },
+      "zoom": {
+        "full": {
+          "accuracy": 0.5833333333333334,
+          "ci": [
+            0.3883466586522876,
+            0.7553239739018824
+          ],
+          "correct": 14,
+          "n": 24
+        },
+        "salient": {
+          "accuracy": 0.5416666666666666,
+          "ci": [
+            0.3507486535891948,
+            0.72108666268789
+          ],
+          "correct": 13,
+          "n": 24
+        },
+        "random": {
+          "accuracy": 0.2916666666666667,
+          "ci": [
+            0.14914648196960875,
+            0.49167693664496637
+          ],
+          "correct": 7,
+          "n": 24
+        },
+        "delta_salient_minus_full": -0.04166666666666674
+      }
+    }
+  },
+  "main": {
+    "accuracy": 0.5,
+    "n": 80,
+    "condition": "correct_image",
+    "split": "dev_test",
+    "run": "sft_dev"
+  }
+}

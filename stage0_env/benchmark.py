@@ -84,9 +84,9 @@ def bench_load(cfg: dict, repeats: int, dry: bool) -> list[Row]:
             vram = (0.0, 0.0)
         else:
             import torch
-            from transformers import AutoModel, AutoModelForCausalLM
+            from transformers import AutoModelForCausalLM, SiglipVisionModel
             dtype = torch.bfloat16 if cfg.get("precision", "bf16") == "bf16" else torch.float16
-            vis = AutoModel.from_pretrained(cfg["vision"]["model"], torch_dtype=dtype)
+            vis = SiglipVisionModel.from_pretrained(cfg["vision"]["model"], torch_dtype=dtype)
             llm = AutoModelForCausalLM.from_pretrained(cfg["language"]["model"],
                                                        torch_dtype=dtype)
             vis.to("cuda").eval()
@@ -118,17 +118,18 @@ def bench_infer(cfg: dict, repeats: int, dry: bool) -> list[Row]:
         return rows
 
     import torch
-    from transformers import AutoModel, AutoModelForCausalLM
+    from transformers import AutoModelForCausalLM, SiglipVisionModel
 
     dtype = torch.bfloat16 if cfg.get("precision", "bf16") == "bf16" else torch.float16
-    vis = AutoModel.from_pretrained(cfg["vision"]["model"], torch_dtype=dtype).to("cuda").eval()
+    vis = SiglipVisionModel.from_pretrained(cfg["vision"]["model"], torch_dtype=dtype).to("cuda").eval()
     llm = AutoModelForCausalLM.from_pretrained(cfg["language"]["model"],
                                                torch_dtype=dtype).to("cuda").eval()
     size = int(cfg["vision"].get("input_size", 384))
-    # transformers 5.x 里 SiglipConfig 自身没有 hidden_size，真正的宽度在
-    # vision_config.hidden_size 上（踩过一次 AttributeError，记在这里）。
-    cfg_vis = vis.config
-    d_vis = getattr(cfg_vis, "hidden_size", None) or cfg_vis.vision_config.hidden_size
+    # 坑一：`AutoModel` 加载 google/siglip-base-patch16-384 得到的是**双塔** SiglipModel，
+    # forward 要 input_ids（文本侧），只传 pixel_values 会报
+    # "You have to specify input_ids"。所以用 SiglipVisionModel（单塔）。
+    # 坑二：SiglipVisionConfig 上才有 hidden_size。
+    d_vis = vis.config.hidden_size
     d_llm = llm.config.hidden_size
     proj = torch.nn.Linear(int(d_vis), int(d_llm), dtype=dtype, device="cuda")
     pixel = (torch.rand(1, 3, size, size, device="cuda", dtype=dtype) - 0.5) / 0.5

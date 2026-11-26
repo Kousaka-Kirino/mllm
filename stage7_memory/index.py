@@ -74,7 +74,9 @@ def citation_ok(answer: str, pages: list[str]) -> bool:
 
     a = answer.lower()
     for p in pages:
-        if p.lower() in a:
+        pl = p.lower()
+        # 纯子串要带边界：p3 不能命中 p30
+        if re.search(rf"(?<![a-z0-9]){re.escape(pl)}(?![0-9])", a):
             return True
         num = re.sub(r"\D", "", p)
         if num and re.search(rf"(?:page|p\.?|#|第)\s*{num}(?!\d)", a):

@@ -56,12 +56,14 @@ def main() -> int:
         return " / ".join(f"{k}:{v}GB" for k, v in list(d.items())[:3])
 
     def schema_frozen() -> str:
-        from picovlm.schema import ANSWER_KINDS, PRIOR_TYPES, SPLITS
-        require(SPLITS == ("train", "dev", "test"), "split 被改动")
-        require(ANSWER_KINDS == ("number", "text", "bool", "label"), "answer_kind 被改动")
+        from picovlm.schema import ACUITY_BINS, CONDITIONS, PRIOR_TYPES, SPLITS
+        require(SPLITS == ("train", "val", "dev_test", "locked_test"), "split 被改动")
+        require(ACUITY_BINS == ("easy", "mid", "hard", "extreme"), "acuity 分箱被改动")
+        require(CONDITIONS == ("prior_only", "image_only", "correct_image",
+                               "mismatched_image"), "实验条件被改动")
         require(PRIOR_TYPES == ("none", "position", "marginal", "numeric", "order"),
                 "prior 类型被改动")
-        return "SPLITS / ANSWER_KINDS / PRIOR_TYPES 与 v1.0 契约一致"
+        return "4 split / 4 分箱 / 4 条件 / 5 先验，与 2.0 契约一致"
 
     def package_clean_import() -> str:
         import subprocess

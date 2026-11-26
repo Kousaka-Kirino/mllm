@@ -23,11 +23,12 @@ STAGES: list[tuple[str, str, str]] = [
     ("S1", "stage1_data.verify_stage1", "数据引擎"),
     ("S2", "stage2_model.verify_stage2", "模型骨架"),
     ("S3", "stage3_train.verify_stage3", "两阶段训练"),
-    ("S4", "stage4_diag.verify_stage4", "2×2 诊断"),
-    ("S5", "stage5_intervene.verify_stage5", "GRPO/RFT 干预"),
-    ("S6", "stage6_budget.verify_stage6", "token 预算"),
+    ("S4", "stage4_eval.verify_stage4", "2×2 诊断"),
+    ("S5", "stage5_intervene.verify_stage5", "课程/反事实/GRPO"),
+    ("S6", "stage6_ablation.verify_stage6", "token 预算"),
     ("S7", "stage7_memory.verify_stage7", "视觉记忆"),
     ("S8", "stage8_system.verify_stage8", "系统与交付"),
+    ("S9", "stage9_report.verify_stage9", "结果收集与报告"),
 ]
 
 COUNT_RE = re.compile(r"-- PASS (\d+) / FAIL (\d+) / SKIP (\d+) --")
