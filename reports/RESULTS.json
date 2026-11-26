@@ -1,5 +1,5 @@
 {
-  "stamp": "20261126T021756Z",
+  "stamp": "20261126T023942Z",
   "data": {
     "profile": "pilot",
     "seed": 17,
@@ -2260,7 +2260,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 91.51,
+          "latency_ms_mean": 78.295,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2287,7 +2287,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 108.37,
+          "latency_ms_mean": 92.83000000000001,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2314,7 +2314,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 93.31500000000001,
+          "latency_ms_mean": 77.11999999999999,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -2341,7 +2341,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 100.37499999999999,
+          "latency_ms_mean": 86.59,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -2368,7 +2368,7 @@
           "ci_low": 0.052368745896216595,
           "ci_high": 0.36041886474075696,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 380.61,
+          "latency_ms_mean": 377.13999999999993,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2395,7 +2395,7 @@
           "ci_low": 0.027866481213768224,
           "ci_high": 0.3010336452284873,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 385.815,
+          "latency_ms_mean": 388.27000000000004,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2422,7 +2422,7 @@
           "ci_low": 0.052368745896216595,
           "ci_high": 0.36041886474075696,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 393.215,
+          "latency_ms_mean": 346.905,
           "by_qtype": {
             "count": 0.0,
             "order": 0.6,
@@ -2449,7 +2449,7 @@
           "ci_low": 0.052368745896216595,
           "ci_high": 0.36041886474075696,
           "tokens_mean": 576.0,
-          "latency_ms_mean": 389.57000000000005,
+          "latency_ms_mean": 349.90999999999997,
           "by_qtype": {
             "count": 0.0,
             "order": 0.6,
@@ -2795,7 +2795,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.475000000000001,
+          "latency_ms_mean": 13.030000000000001,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2822,7 +2822,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.190000000000001,
+          "latency_ms_mean": 13.120000000000001,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -2849,7 +2849,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.7,
+          "latency_ms_mean": 11.575,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -2876,7 +2876,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.645,
+          "latency_ms_mean": 11.495000000000001,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -2903,7 +2903,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.835000000000003,
+          "latency_ms_mean": 12.66,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -2930,7 +2930,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.02,
+          "latency_ms_mean": 10.695,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -2957,7 +2957,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.035000000000002,
+          "latency_ms_mean": 13.290000000000001,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -2984,7 +2984,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 12.709999999999999,
+          "latency_ms_mean": 10.905000000000001,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,
@@ -3011,7 +3011,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.780000000000001,
+          "latency_ms_mean": 9.960000000000003,
           "by_qtype": {
             "maxcat": 0.0,
             "compare": 0.0,
@@ -3038,7 +3038,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.91,
+          "latency_ms_mean": 12.665000000000003,
           "by_qtype": {
             "maxcat": 1.0,
             "compare": 1.0,
@@ -3065,7 +3065,7 @@
           "ci_low": 0.0,
           "ci_high": 0.16112515805281938,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 13.439999999999998,
+          "latency_ms_mean": 10.915000000000003,
           "by_qtype": {
             "count": 0.0,
             "order": 0.0,
@@ -3092,7 +3092,7 @@
           "ci_low": 0.8388748419471806,
           "ci_high": 1.0,
           "tokens_mean": 0.0,
-          "latency_ms_mean": 11.32,
+          "latency_ms_mean": 10.74,
           "by_qtype": {
             "count": 1.0,
             "order": 1.0,

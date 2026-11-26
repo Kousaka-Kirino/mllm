@@ -36,3 +36,15 @@ python -m stage1_data.build --profile full --seed 17 --out data/full
 这些文件被 `.gitignore` 排除，因为**它们由代码 + 种子确定性地生成**。
 `python -m stage1_data.validate` 会重算哈希并与 `data/hashes.json` 比对，
 所以"数据不在仓库里"不等于"数据不可复现"。
+
+## 两条设计约定（写论文/答辩时必须讲清）
+
+1. **2×2 是"组间"设计**：易/难 × 一致/冲突 四格用的是**不同的图**（每格各自的族）。
+   所以四格之间只能做组间比较（Wilson CI、按 family 聚类的 bootstrap），
+   **不能**对四格做配对检验；配对只发生在"同一样本的不同条件"上
+   （correct_image vs mismatched_image、seed 17 vs seed 23）。
+   `validate` 的 `pair-integrity` 检查就是在钉这条：一个 `pair_id` 只留一条、且不跨 split。
+2. **先验标签必须能从数据重算**：`meta.prior_role` 由 `answer == prior_answer` 直接算出，
+   不信生成器自报。full 构建时抓到过 6 条"标了 consistent 但答案与先验不等"的 marginal 样本，
+   现在这类样本会被自动改标为 conflict（构建日志会打印修正条数）。
+   判分、分格、报告都以重算结果为准。

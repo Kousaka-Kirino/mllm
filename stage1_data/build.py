@@ -180,6 +180,7 @@ class Builder:
         self._img_cache: dict[str, str] = {}     # 内容哈希 -> 相对路径
         self._measure_cache: dict[str, dict] = {}
         self._family_seen: dict[str, str] = {}   # family_id -> split
+        self._role_fixed: int = 0                # 生成器自报与实际答案不符的条数
         self.serial: Counter = Counter()
 
     # ------------------------------------------------------------------ 图像
@@ -197,6 +198,18 @@ class Builder:
     # ------------------------------------------------------------------ 记录
     def _add(self, split: str, cell: str, prior: str, item: Item, tag: str) -> None:
         payload = item.to_payload()
+        # 先验标签**以实际答案为准**，不信生成器自报：full profile 里抓到过 6 条
+        # "标了 consistent 但 answer != prior_answer" 的样本（marginal 生成在
+        # 噪声下没把先验做成立）。标签必须能从数据本身重算，否则 2×2 不可信。
+        pa = payload.get("prior_answer")
+        if pa is None:
+            # 中性样本没有先验，角色就是 "none"，不能因为 pa 是 None 就当成 conflict
+            role = prior if prior == "none" else "none"
+        else:
+            holds = str(payload.get("answer")).strip() == str(pa).strip()
+            role = "consistent" if holds else "conflict"
+        if role != prior:
+            self._role_fixed += 1
         fam = family_id_of(item.spec, item.values)
         prev = self._family_seen.setdefault(fam, split)
         if prev != split:
@@ -204,7 +217,7 @@ class Builder:
                 f"family {fam} 出现在 {prev} 与 {split}：种子段重叠了，必须修生成逻辑")
         img_rel, meas = self._save_image(item)
         self.records.append(RawRec(
-            split=split, cell=cell, prior=prior, family_id=fam, payload=payload,
+            split=split, cell=cell, prior=role, family_id=fam, payload=payload,
             image_path=img_rel, image_size=int(item.spec.size),
             glyph_px_render=float(meas.get("glyph_px_render") or 0.0),
             glyph_px_model=float(meas.get("glyph_px_model") or 0.0),
@@ -368,6 +381,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[build] acuity 阈值 easy≥{thresholds['easy_min_px_model']}px "
           f"mid≥{thresholds['mid_min_px_model']}px extreme<{thresholds['extreme_max_px_model']}px")
     print(f"[build] 实测覆盖 {thresholds.get('coverage')}")
+    if b._role_fixed:
+        print(f"[build] 注意：{b._role_fixed} 条样本的自报 prior 与实际答案不符，"
+              f"已按实际答案改标（这就是'标签必须可重算'的用处）")
     return 0
 
 

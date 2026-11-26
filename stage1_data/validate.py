@@ -33,8 +33,8 @@ MIN_FAMILIES_PER_CELL = {"full": 200, "pilot": 10}
 
 
 # --------------------------------------------------------------------- 载入
-def load_split(split: str, root: Path) -> list[Sample]:
-    path = root / "data" / "synth" / f"{split}.jsonl"
+def load_split(split: str, data_base: Path) -> list[Sample]:
+    path = data_base / "synth" / f"{split}.jsonl"
     out: list[Sample] = []
     for row in io.read_jsonl(path):
         out.append(Sample(**row))
@@ -72,10 +72,10 @@ def recompute(s: Sample) -> str | None:
 
 
 # --------------------------------------------------------------------- 检查
-def check_files(root: Path) -> str:
-    missing = [s for s in SPLITS if not (root / "data" / "synth" / f"{s}.jsonl").exists()]
+def check_files(root: Path, data_base: Path) -> str:
+    missing = [s for s in SPLITS if not (data_base / "synth" / f"{s}.jsonl").exists()]
     require(not missing, f"缺 split 文件：{missing}")
-    return f"4 个 split 文件都在（{root / 'data' / 'synth'}）"
+    return f"4 个 split 文件都在（{data_base / 'synth'}）"
 
 
 def check_counts(data: dict[str, list[Sample]], profile: str) -> str:
@@ -171,6 +171,27 @@ def check_prior_labels(data: dict[str, list[Sample]]) -> str:
     return "四类先验标注与 prior_holds 一致"
 
 
+def check_pair_integrity(data: dict[str, list[Sample]]) -> str:
+    """反事实对（pair_id）的现状：**每个 pair 在一个 split 里只留一条**。
+
+    这是刻意的设计（2×2 是组间比较：每格用不同的图），所以这里断言的正是
+    "不多于一条"；如果哪天改成成对投放，这条会失败并提醒你重写分析。
+    """
+    where: dict[str, set[str]] = {}
+    count: Counter = Counter()
+    for split, rows in data.items():
+        for s in rows:
+            if not s.pair_id:
+                continue
+            where.setdefault(s.pair_id, set()).add(split)
+            count[s.pair_id] += 1
+    cross = [p for p, sp in where.items() if len(sp) > 1]
+    require(not cross, f"{len(cross)} 个 pair 跨 split：{cross[:3]}")
+    multi = [p for p, c in count.items() if c > 1]
+    require(not multi, f"{len(multi)} 个 pair 在同一 split 里有多条（当前设计不支持）：{multi[:3]}")
+    return f"{len(count)} 个 pair 标签，均单条且不跨 split（组间设计）"
+
+
 def check_acuity(data: dict[str, list[Sample]], th: dict) -> str:
     bad, bins = [], Counter()
     for v in data.values():
@@ -233,20 +254,24 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="stage1_data.validate")
     ap.add_argument("--profile", default="pilot", choices=("pilot", "full"))
     ap.add_argument("--root", default=None)
+    ap.add_argument("--data-dir", default="data",
+                    help="数据根目录名（pilot 用 data，full 用 data/full）")
     args = ap.parse_args(argv)
     root = Path(args.root) if args.root else ROOT
-    card = io.read_json(root / "data" / "datacard.json")
+    data_base = root / args.data_dir
+    card = io.read_json(data_base / "datacard.json")
 
-    data = {s: load_split(s, root) for s in SPLITS}
+    data = {s: load_split(s, data_base) for s in SPLITS}
     th = card["acuity_thresholds"]
 
     checks = [
-        ("splits-present", lambda: check_files(root)),
+        ("splits-present", lambda: check_files(root, data_base)),
         ("counts", lambda: check_counts(data, args.profile)),
         ("ids-unique", lambda: check_ids(data)),
         ("images-exist", lambda: check_images(data, root)),
         ("answers-recomputable", lambda: check_answers(data)),
         ("family-no-leak", lambda: check_family_split(data)),
+        ("pair-integrity", lambda: check_pair_integrity(data)),
         ("test-balanced", lambda: check_balance(data, args.profile)),
         ("prior-labels", lambda: check_prior_labels(data)),
         ("acuity-measured", lambda: check_acuity(data, th)),

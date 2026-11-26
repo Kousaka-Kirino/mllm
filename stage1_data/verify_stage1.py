@@ -26,7 +26,7 @@ from .render import render
 
 def _load() -> tuple[dict[str, list[Sample]], dict]:
     card = io.read_json(DATA / "datacard.json")
-    data = {s: V.load_split(s, ROOT) for s in V.SPLITS}
+    data = {s: V.load_split(s, DATA) for s in V.SPLITS}
     return data, card
 
 
@@ -81,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
         return f"四个 split 的条数与 {args.profile} 配置相符（±6）"
 
     checks = [
-        ("splits-present", lambda: V.check_files(ROOT)),
+        ("splits-present", lambda: V.check_files(ROOT, DATA)),
         ("ids-unique", lambda: V.check_ids(data)),
         ("images-exist", lambda: V.check_images(data, ROOT)),
         ("answers-recomputable", lambda: V.check_answers(data)),
