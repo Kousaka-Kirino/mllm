@@ -94,7 +94,15 @@ class PicoVLM(nn.Module):
 
     # ------------------------------------------------------------------ 视觉
     def encode_images(self, pixel_values: torch.Tensor) -> torch.Tensor:
+        v_dtype = next(self.vision.parameters()).dtype
+        if pixel_values.dtype != v_dtype:
+            pixel_values = pixel_values.to(v_dtype)
         feats = self.vision(pixel_values)          # (B, N, Dv)
+        # 视觉塔可能是 fp32（SigLIP 权重），连接器/LLM 可能是 bf16：
+        # 不显式对齐 dtype 会在 Qwen 的 q_proj 里报 mat1/mat2 dtype 不一致。
+        want = next(self.connector.parameters()).dtype
+        if feats.dtype != want:
+            feats = feats.to(want)
         return self.connector(feats)               # (B, Nv, Dllm)
 
     # ------------------------------------------------------------------ 前向

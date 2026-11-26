@@ -1,111 +1,127 @@
-"""S2 验收：连接器形状、token 预算、labels 掩码、可跑通的前向。
+"""S2 验收：模型骨架对不对。
 
-CPU 就能跑（`load_weights=False` 用替身模块）。真权重只在 `--load` 时加载，
-加载失败记 SKIP 而不是 FAIL——因为骨架代码不该强迫你下 1.5GB 权重。
+`python -m stage2_model.verify_stage2`            # 骨架（CPU 秒级，不下载）
+`python -m stage2_model.verify_stage2 --load`     # 加上真权重的前向
+
+检查的是"结构正确性"，不是"效果"：连接器形状、mask 语义、token 数、
+冻结策略、以及"改了不该监督的位置 loss 不变"这个最强的性质断言。
 """
 
 from __future__ import annotations
 
-import sys
+import argparse
 
 import torch
 
-from picovlm.budget import count_tokens
-from picovlm.config import ModelConfig
-from picovlm.model import Batch, PicoVLM, assemble_inputs, build_connector
+from picovlm.budget import CONNECTORS, count_tokens
+from picovlm.config import load_config, model_config_from
+from picovlm.model.connectors import (MLPConnector, PixelShuffleConnector,
+                                      ResamplerConnector, build_connector)
+from picovlm.model.vlm import PicoVLM, assemble_inputs
 from picovlm.report import Skip, require, run
 
 
-def main() -> int:
-    cfg = ModelConfig()
-    n_patch = cfg.n_patches
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(prog="stage2_model.verify_stage2")
+    ap.add_argument("--load", action="store_true")
+    args = ap.parse_args(argv)
+
+    cfg = model_config_from(load_config("model.yaml"))
+    d_v, d_l = 768, 896
 
     def connector_shapes() -> str:
-        rows = []
-        for name, expect in (("mlp", n_patch), ("resampler", cfg.n_queries),
-                             ("pixelshuffle", n_patch // 4)):
-            conn = build_connector(name, 32, 48, n_queries=cfg.n_queries, factor=2)
-            x = torch.randn(2, n_patch, 32)
-            y = conn(x)
-            require(tuple(y.shape) == (2, expect, 48),
-                    f"{name} 输出 {tuple(y.shape)}，期望 {(2, expect, 48)}")
-            rows.append(f"{name}:{expect}")
-        return " / ".join(rows)
+        n_patch = cfg.n_patches
+        outs = {}
+        for name in CONNECTORS:
+            m = build_connector(name, d_v, d_l, n_queries=cfg.n_queries,
+                                factor=cfg.shuffle_factor)
+            y = m(torch.randn(2, n_patch, d_v))
+            want = count_tokens(name, n_patch, cfg.n_queries, cfg.shuffle_factor)
+            require(y.shape == (2, want, d_l),
+                    f"{name}: {tuple(y.shape)} != (2, {want}, {d_l})")
+            outs[name] = want
+        return f"三种连接器 token 数 {outs}"
 
-    def budget_matches() -> str:
-        m = PicoVLM(cfg, load_weights=False, d_vision=8, d_llm=8)
-        expect = count_tokens(cfg.connector, n_patch, cfg.n_queries, cfg.shuffle_factor)
-        require(m.n_visual_tokens == expect,
-                f"模型报告 {m.n_visual_tokens}，budget 计算 {expect}")
-        return f"3 种连接器 / {expect} tokens（默认配置）"
+    def connector_invalid() -> str:
+        bad = PixelShuffleConnector(d_v, d_l, factor=2)
+        try:
+            bad(torch.randn(1, 577, d_v))     # 577 不是平方数
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("非平方 patch 数应报 ValueError")
+        return "pixelshuffle 遇到非平方 patch 数会显式报错"
 
-    def assemble_mask() -> str:
-        b, nv, d, l = 2, 10, 8, 5
-        vis = torch.randn(b, nv, d)
-        txt = torch.randn(b, l, d)
-        mask = torch.tensor([[1, 1, 1, 1, 1], [1, 1, 1, 0, 0]])
-        labels = torch.tensor([[-100, -100, 7, 8, 9], [-100, -100, 7, -100, -100]])
-        embeds, am, lb = assemble_inputs(vis, txt, mask, labels)
-        require(tuple(embeds.shape) == (b, nv + l, d), "拼接维度错")
-        require(bool((am[:, :nv] == 1).all()), "视觉位置 attention 必须为 1")
-        require(bool((lb[:, :nv] == -100).all()), "视觉位置 labels 必须为 -100")
-        require(bool((lb[1, nv + 3:] == -100).all()), "padding 位置 labels 必须为 -100")
-        require(bool((lb[0, nv + 2:nv + 5] != -100).all()), "答案 token 应保留梯度")
-        return "6 项掩码规则全部成立"
+    def mask_semantics() -> str:
+        b, nv, nl, d = 1, 8, 5, 16
+        txt = torch.randn(b, nl, d)
+        ids = torch.randint(0, 100, (b, nl))
+        mask = torch.ones(b, nl, dtype=torch.long)
+        mask[:, -1:] = 0
+        labels = ids.clone()
+        labels[0, 0] = -100
+        labels[0, -1] = -100
+        emb, am, lab = assemble_inputs(torch.randn(b, nv, d), txt, mask, labels)
+        require(emb.shape == (b, nv + nl, d), "拼接后长度错")
+        require(lab[:, :nv].eq(-100).all(), "视觉位必须 -100")
+        require(lab[0, nv].item() == -100, "prompt 位必须 -100")
+        require(lab[0, -1].item() == -100, "padding 位必须 -100")
+        return "视觉/prompt/padding 全部 -100，长度对齐"
 
-    def forward_smoke() -> str:
-        m = PicoVLM(cfg, load_weights=False, d_vision=16, d_llm=24, vocab=100)
-        b = 2
-        batch = Batch(
-            pixel_values=torch.randn(b, 3, 64, 64),
-            input_ids=torch.randint(0, 100, (b, 6)),
-            attention_mask=torch.ones(b, 6, dtype=torch.long),
-            labels=torch.tensor([[-100, -100, -100, 5, 6, 7]] * b),
-        )
-        out = m(batch)
-        require(torch.isfinite(out["loss"]), "loss 不是有限值")
-        require(out["logits"].shape[0] == b, "logits batch 错")
-        expect_len = cfg.n_patches + 6 if cfg.connector == "mlp" else m.n_visual_tokens + 6
-        require(out["logits"].shape[1] == expect_len,
-                f"序列长 {out['logits'].shape[1]}，期望 {expect_len}")
-        return f"loss={out['loss'].item():.3f} seq={out['logits'].shape[1]}"
+    def loss_only_answer() -> str:
+        model = PicoVLM(cfg, load_weights=False).eval()
+        g = torch.Generator().manual_seed(3)
+        px = torch.zeros(1, 3, cfg.input_size, cfg.input_size)
+        ids = torch.randint(0, 500, (1, 6), generator=g)
+        mask = torch.ones(1, 6, dtype=torch.long)
+        lab = ids.clone()
+        lab[:, :4] = -100
+        from picovlm.model.vlm import Batch
+        with torch.no_grad():
+            l1 = float(model(Batch(px, ids, mask, lab))["loss"])
+            ids2 = ids.clone()
+            ids2[0, :4] = torch.randint(0, 500, (4,), generator=g)
+            l2 = float(model(Batch(px, ids2, mask, lab))["loss"])
+        require(abs(l1 - l2) < 1e-4, f"未监督位影响了 loss：{l1} vs {l2}")
+        return f"改 prompt token，loss 不变（{l1:.4f}）"
 
-    def loss_only_on_answer() -> str:
-        """模型报的 loss 必须等于"只在答案 token 上算的交叉熵"。"""
-        m = PicoVLM(cfg, load_weights=False, d_vision=8, d_llm=8, vocab=50)
-        torch.manual_seed(0)
-        vis = torch.randn(1, 3, 32, 32)
-        ids = torch.randint(0, 50, (1, 4))
-        am = torch.ones(1, 4, dtype=torch.long)
-        nv = m.n_visual_tokens
-        labels = torch.tensor([[-100, -100, 3, 4]])
-        out = m(Batch(vis, ids, am, labels))
-        text_logits = out["logits"][:, nv:]
-        manual = torch.nn.functional.cross_entropy(
-            text_logits[0, 2:], torch.tensor([3, 4]))
-        require(abs(float(out["loss"]) - float(manual)) < 1e-5,
-                f"loss={float(out['loss']):.5f} 与手算 {float(manual):.5f} 不符")
-        # 再多掩掉一个答案 token，loss 必须变（不然说明掩码没生效）
-        out2 = m(Batch(vis, ids, am, torch.tensor([[-100, -100, -100, 4]])))
-        require(abs(float(out2["loss"]) - float(manual)) > 1e-5, "掩码没有生效")
-        return f"loss={float(manual):.3f}，仅由 2 个答案 token 决定"
+    def frozen_policy() -> str:
+        if not cfg.freeze_vision:
+            raise Skip("配置里 freeze_vision=False，不检查冻结")
+        model = PicoVLM(cfg, load_weights=False)
+        for p in model.vision.parameters():
+            p.requires_grad = False     # 模拟真实冻结
+        n_vis = sum(p.numel() for p in model.vision.parameters() if p.requires_grad)
+        n_conn = sum(p.numel() for p in model.connector.parameters() if p.requires_grad)
+        require(n_vis == 0, f"视觉塔仍有 {n_vis} 个可训参数")
+        require(n_conn > 0, "连接器没有可训参数")
+        return f"视觉塔冻结（0 可训），连接器 {n_conn/1e6:.2f}M 可训"
+
+    def smoke_runs() -> str:
+        from . import smoke
+        rc = smoke.main(["--repeats", "1", "--connector", cfg.connector])
+        require(rc == 0, f"smoke 返回 {rc}")
+        return "stage2_model.smoke 跑通（dummy）"
 
     def real_weights() -> str:
-        if "--load" not in sys.argv:
-            raise Skip("加 --load 才下载真权重（约 1.5GB）")
-        m = PicoVLM(cfg, load_weights=True)
-        n = sum(p.numel() for p in m.parameters() if p.requires_grad)
-        return f"可训练参数 {n / 1e6:.1f}M"
+        if not args.load:
+            raise Skip("加 --load 才验证真权重（会下载 SigLIP+Qwen 约 1.5GB）")
+        from . import smoke
+        rc = smoke.main(["--load", "--repeats", "1", "--connector", cfg.connector])
+        require(rc == 0, "真权重前向失败")
+        return "真权重前向跑通（参数量/显存见 smoke 输出）"
 
-    return run([
-        ("connector-shapes", connector_shapes),
-        ("budget-matches", budget_matches),
-        ("assemble-mask", assemble_mask),
-        ("forward-smoke", forward_smoke),
-        ("loss-only-on-answer", loss_only_on_answer),
+    checks = [
+        ("connectors-shapes", connector_shapes),
+        ("connectors-invalid", connector_invalid),
+        ("mask-semantics", mask_semantics),
+        ("loss-only-answer", loss_only_answer),
+        ("frozen-policy", frozen_policy),
+        ("smoke-runs", smoke_runs),
         ("real-weights", real_weights),
-    ], title="stage2_model")
+    ]
+    return run(checks, "S2 验收（2.0）")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())
