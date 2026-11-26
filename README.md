@@ -151,7 +151,7 @@ python -m picovlm.cli --image data/synth/images/x.png --ask "Which category has 
 | 每个命令干什么、要多久、吃多少显存 | [RUNBOOK.md](RUNBOOK.md) |
 | 实验结论与数字 | [reports/REPORT_2.0.md](reports/REPORT_2.0.md) |
 | 简历条目 ↔ 证据 | [stage9_report/CLAIMS.md](stage9_report/CLAIMS.md) |
-| 复试问答 | [stage9_deliver/](stage9_deliver/) |
+| 复试问答 | [stage9_report/deliver/](stage9_report/deliver/) |
 | 这台机器的真实环境 | [ENVIRONMENT.md](ENVIRONMENT.md) |
 
 > 历史文档 `PicoVLM_项目规划.md` 是 1.0 版（按"从零训 5 亿参数"设计），

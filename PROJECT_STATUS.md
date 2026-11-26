@@ -86,7 +86,7 @@
 | 声明 ↔ 证据对照（13 条） | ✅ | `stage9_report/CLAIMS.md` |
 | 数字可追溯性检查 | ✅ | `numbers-traceable`：32 个三位小数全部可回溯 |
 | 交付 CLI | ✅ | `python -m picovlm.cli --image ... --ask ...` |
-| 简历条目 / 复试问答 / 一页纸架构 | ✅ | `stage9_deliver/0{1,2,3}_*.md` |
+| 简历条目 / 复试问答 / 一页纸架构 | ✅ | `stage9_report/deliver/0{1,2,3}_*.md` |
 
 ## 下一步（按优先级）
 
