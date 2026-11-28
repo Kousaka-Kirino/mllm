@@ -26,6 +26,7 @@
 | 19 | **full 规模重训推翻 pilot 结论**（最重要的负结果修正） | 数据 156→19,998 条、步数 237→2,500：冲突格 0.000/0.100 → **0.580/0.558**；prior_effect +0.950 → **+0.385** [+0.325,+0.444]；acuity_effect 仍 +0.026 [−0.008,+0.060] | `outputs/eval/sft_fulltrain_dev/grid.json`、`reports/eval_sft_fulltrain_dev.md` |
 | 20 | full 模型确实在用视觉证据（pilot 则不是） | correct 0.760 vs mismatched 0.367，577 对 vs 86 对，McNemar **p = 3.5e-90**（pilot 同一探针 p = 1.0） | `outputs/eval/sft_fulltrain_dev/predictions.jsonl` |
 | 21 | locked_test 一次性开封，防"边调边看" | 5,000 条 × 3 条件，留痕 unsealed_at / git head / predictions sha256 | `outputs/eval/final_locked/UNSEALED.json` |
+| 22 | **三种干预都没跑赢"只多训一会儿"的对照** | 同一基座 / 同 2,000 条样本 / 1,500 步：curriculum、counterfactual、GRPO 相对 plain 对照全部 n.s.（p = 0.16 / 0.60 / 0.25）；GRPO 200 组里 190 组奖励相同、只有 10 次有效更新 | `reports/RQ2_ARMS.md`、`reports/compare_arm_plain_vs_arm_*.md` |
 
 ## 三条写简历的规矩
 

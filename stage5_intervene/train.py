@@ -29,16 +29,20 @@ from stage3_train.dataset import (PROMPT, ChartSFT, EOS_SUFFIX, load_image,
 from stage5_intervene import grpo as G
 
 
-def load_sft(cfg, device):
-    """从 SFT pilot 继续训：载入连接器与 LoRA 适配器。"""
+def load_sft(cfg, device, init: str = "sft_pilot"):
+    """从某个 SFT 检查点继续训：载入连接器与 LoRA 适配器。
+
+    `init` 是 `outputs/ckpt/` 下的目录名（pilot 训练用 `sft_pilot`，
+    full 规模用 `sft_full`）——干预实验必须从**同一个**基座出发才可比。
+    """
     from peft import PeftModel
 
     model, tok = build_model(cfg, load_weights=True, device=device)
-    ck = OUTPUTS / "ckpt" / "sft_pilot" / "connector.pt"
+    ck = OUTPUTS / "ckpt" / init / "connector.pt"
     if ck.exists():
         model.connector.load_state_dict(torch.load(ck, map_location="cpu"))
         print(f"connector <- {ck}")
-    ad = OUTPUTS / "ckpt" / "sft_pilot" / "lora"
+    ad = OUTPUTS / "ckpt" / init / "lora"
     if ad.exists():
         model.llm = PeftModel.from_pretrained(model.llm, ad)
         print(f"lora       <- {ad}")
@@ -164,7 +168,7 @@ def run_grpo(model, tok, samples, *, steps: int, group_size: int = 2,
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--method", required=True,
-                    choices=["curriculum", "counterfactual", "grpo"])
+                    choices=["plain", "curriculum", "counterfactual", "grpo"])
     ap.add_argument("--steps", type=int, default=20)
     ap.add_argument("--limit", type=int, default=64)
     ap.add_argument("--lr", type=float, default=None)
@@ -173,17 +177,26 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--batch-size", type=int, default=1)
     ap.add_argument("--out", default=None)
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--init", default="sft_pilot",
+                    help="从哪个 SFT 检查点继续（outputs/ckpt/<name>）")
+    ap.add_argument("--config", default="sft_pilot.yaml")
+    ap.add_argument("--shuffle-seed", type=int, default=None,
+                    help="给样本子集打乱；三种方法用同一个值才可比")
     args = ap.parse_args(argv)
 
-    cfg = load_config("sft_pilot.yaml")
+    cfg = load_config(args.config)
     out_dir = Path(args.out or f"outputs/ckpt/{args.method}")
     if not out_dir.is_absolute():
         out_dir = OUTPUTS.parent / out_dir
     run_dir = ensure_dir(OUTPUTS / "train" / f"{args.method}_{utc_stamp()}")
-    print(f"== S5 {args.method} ==\nsteps={args.steps} limit={args.limit}")
+    print(f"== S5 {args.method} ==\nsteps={args.steps} limit={args.limit} "
+          f"init={args.init}")
 
-    model, tok = load_sft(cfg, args.device)
+    model, tok = load_sft(cfg, args.device, args.init)
     samples = load_samples("train", limit=args.limit)
+    if args.shuffle_seed is not None:
+        random.Random(args.shuffle_seed).shuffle(samples)
+        print(f"shuffled {len(samples)} samples (seed={args.shuffle_seed})")
     lr = args.lr or (1e-5 if args.method == "grpo" else 5e-5)
 
     if args.method == "grpo":
@@ -196,8 +209,12 @@ def main(argv: list[str] | None = None) -> int:
     else:
         if args.method == "curriculum":
             order = curriculum_order(samples)
-        else:
+        elif args.method == "counterfactual":
             order = augment_counterfactual(samples)
+        else:
+            # plain：同样的样本、同样的步数，只是不做课程也不做增广——
+            # 这是"干预到底有没有用"的对照组，缺了它三臂对比不成立。
+            order = samples
         loader = make_loader(cfg, tok, split="train", limit=len(order) + 8,
                              batch_size=args.batch_size)
         ds = ChartSFT(order, tok, image_size=384)
